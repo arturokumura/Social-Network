@@ -1,0 +1,168 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #f2efe8;
+    --card-bg: #ffffff;
+    --card-border: #e6e2d8;
+    --input-border: #d9d5c8;
+    --text: #1f1e19;
+    --text-muted: #6b6a63;
+    --placeholder: #8a8a85;
+    --primary: #1860a3;
+    --primary-hover: #134f87;
+    --radius-card: 16px;
+    --radius-input: 8px;
+}
+
+/* ===== Base ===== */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 24px 16px;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "DejaVu Sans", sans-serif;
+}
+
+/* ===== Título / logo ===== */
+#titleDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+
+#title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+}
+
+/* ===== Card do formulário ===== */
+#loginForm {
+    width: 100%;
+    max-width: 402px;
+    padding: 30px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+}
+
+#loginForm h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+#loginForm p {
+    margin-top: 4px;
+    margin-bottom: 22px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ===== Labels e inputs ===== */
+#loginForm label {
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+#loginForm input:not([type="submit"]) {
+    width: 100%;
+    height: 42px;
+    margin-bottom: 20px;
+    padding: 0 14px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    background-color: var(--card-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-input);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#loginForm input::placeholder {
+    color: var(--placeholder);
+}
+
+#loginForm input:not([type="submit"]):focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(24, 96, 163, 0.15);
+}
+
+/* ===== Botão ===== */
+#loginForm input[type="submit"] {
+    width: 100%;
+    height: 42px;
+    margin-top: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #ffffff;
+    background-color: var(--primary);
+    border: none;
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#loginForm input[type="submit"]:hover {
+    background-color: var(--primary-hover);
+}
+
+#loginForm input[type="submit"]:active {
+    transform: scale(0.99);
+}
+
+#loginForm input[type="submit"]:focus-visible {
+    outline: 3px solid rgba(24, 96, 163, 0.35);
+    outline-offset: 2px;
+}
+
+/* ===== Link "Criar conta" ===== */
+#noAccountDiv {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+#create_account_link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+#create_account_link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Telas pequenas ===== */
+@media (max-width: 480px) {
+    #loginForm {
+        padding: 24px 20px;
+    }
+
+    #title {
+        font-size: 1.6rem;
+    }
+}
