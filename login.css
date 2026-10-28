@@ -35,7 +35,7 @@ body {
 }
 
 /* ===== Título / logo ===== */
-#titleDiv {
+#IconDiv {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,8 +43,8 @@ body {
 }
 
 #icon {
-    width: 26px;
-    height: 26px;
+    width: 300px;
+    height: 90px;
     object-fit: contain;
 }
 
