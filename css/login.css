@@ -33,7 +33,7 @@ body {
     color: var(--text);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "DejaVu Sans", sans-serif;
     
-    background: url(images/fundo-zynk-4k.png) center / cover no-repeat fixed;
+    background: url(../images/fundo-zynk-4k.png) center / cover no-repeat fixed;
 
 }
 
