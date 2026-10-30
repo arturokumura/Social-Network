@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <div id="IconDiv">
+        <img src="../images/icon.png" alt="" id="icon">
+    </div>
+
+    <form action="" id="loginForm">
+        <h2>Entrar</h2>
+        <p>Acesse sua conta para ver e criar posts.</p>
+        <label for="inputEmail">E-mail</label>
+        <input type="email" name="email" id="inputEmail" required placeholder="nome@email.com">
+
+        <label for="inputPassword">Senha</label>
+        <input type="password" name="password" id="inputPassword" required placeholder="Sua senha">
+
+        <input type="submit" value="Entrar">
+    </form>
+
+    <div id="noAccountDiv">Não tem uma conta? <a href="./signUpPage.html" target="_self" id="create_account_link">Criar conta</a></div>
+
+    <script src="../js/login.js"></script>
+</body>
+</html>
