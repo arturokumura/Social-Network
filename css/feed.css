@@ -1,0 +1,298 @@
+/* --- Configuração Global --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f4efe6; /* Tom bege claro de fundo */
+  color: #2d3748;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Barra de Navegação Superior --- */
+header {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+header img {
+  max-height: 40px; /* Impede que ultrapasse esta altura */
+  width: auto;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Controla rigorosamente o tamanho da imagem do logo */
+.logo-area img, .logo-icon {
+  height: 36px; /* Podes ajustar para 32px ou 40px se preferires */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Controla o tamanho do texto do logo ao lado da imagem */
+.logo-area span, .logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.user-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f8fafc;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.avatar-mini {
+  width: 28px;
+  height: 28px;
+  background-color: #1d63b8;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.btn-sair {
+  background-color: transparent;
+  border: 1px solid #cbd5e1;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #475569;
+  transition: background-color 0.2s;
+}
+
+.btn-sair:hover {
+  background-color: #f1f5f9;
+}
+
+/* --- Layout Principal (Grid / Flex) --- */
+main {
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Cartões Gerais --- */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+/* --- Formulários (Entrar / Criar Conta) --- */
+.form-group {
+  margin-bottom: 0.85rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #1d63b8;
+  box-shadow: 0 0 0 2px rgba(29, 99, 184, 0.1);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #1d63b8;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+.btn-primary:hover {
+  background-color: #154e92;
+}
+
+/* --- Caixa de Publicação ("O que você está pensando?") --- */
+.post-box textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.8rem;
+  resize: none;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.post-box textarea:focus {
+  border-color: #1d63b8;
+}
+
+.post-box-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.btn-publicar {
+  background-color: #1d63b8;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* --- Cartão de Publicações (Feed) --- */
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.post-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.post-author {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.post-time {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.post-content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #64748b;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.75rem;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: inherit;
+}
+
+/* --- Secção de Comentários --- */
+.comments-section {
+  margin-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comment {
+  background-color: #f8fafc;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+}
+
+.comment-input-area {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.comment-input-area input {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.btn-comment {
+  background-color: #fff;
+  border: 1px solid #cbd5e1;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
