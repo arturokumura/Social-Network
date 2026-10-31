@@ -10,12 +10,27 @@ body {
   background-color: #f4efe6; /* Tom bege claro de fundo */
   color: #2d3748;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+    "header header"
+    "aside main";
+}
+
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "header"
+      "aside"
+      "main";
+  }
 }
 
 /* --- Barra de Navegação Superior --- */
 header {
+  grid-area: header;
   background-color: #ffffff;
   display: flex;
   justify-content: space-between;
@@ -37,25 +52,19 @@ header img {
   background-color: #1d63b8;
   color: #ffffff;
   border-radius: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
   font-weight: bold;
+  object-fit: cover;
 }
 
 #headerUsername {
   font-weight: 600;
   color: #1e293b;
   font-size: 0.95rem;
-  margin-left: -0.5rem; /* Ajuste para aproximar do avatar se necessário */
-}
-
-/* Agrupamento visual à direita do header (opcional se quiser juntar avatar, nome e botão) */
-.user-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  margin-left: 0.5rem;
 }
 
 #logoutButton {
@@ -75,29 +84,21 @@ header img {
   border-color: #94a3b8;
 }
 
-/* --- Layout Principal (Grid com Aside e Main) --- */
-.feed-layout, body {
-  display: grid;
-}
-
-/* Estrutura de colunas da página principal */
-body {
-  grid-template-columns: 280px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas: 
-    "header header"
-    "aside main";
-}
-
-header {
-  grid-area: header;
-}
-
+/* --- Painel de Perfil Lateral (Aside) --- */
 #profileInfo {
   grid-area: aside;
   padding: 1.5rem;
 }
 
+#profileInfoDiv {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+/* --- Área Principal do Feed --- */
 main {
   grid-area: main;
   max-width: 850px;
@@ -107,28 +108,12 @@ main {
 }
 
 @media (max-width: 900px) {
-  body {
-    grid-template-columns: 1fr;
-    grid-template-areas: 
-      "header"
-      "aside"
-      "main";
-  }
   main {
     padding: 1rem;
   }
 }
 
-/* --- Painel de Perfil (Aside) --- */
-#profileInfoDiv {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-/* --- Caixa Superior de Publicação (#upperPostDiv) --- */
+/* --- Caixa Superior de Publicação --- */
 #upperPostDiv {
   background-color: #ffffff;
   border-radius: 12px;
@@ -138,49 +123,7 @@ main {
   margin-bottom: 1.5rem;
 }
 
-#upperPostDiv textarea, 
-#upperPostDiv input[type="text"] {
-  width: 100%;
-  min-height: 80px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0.75rem;
-  resize: none;
-  outline: none;
-  font-size: 0.95rem;
-  color: #1e293b;
-  background-color: #fff;
-  transition: border-color 0.2s;
-}
-
-#upperPostDiv textarea:focus {
-  border-color: #1d63b8;
-  box-shadow: 0 0 0 2px rgba(29, 99, 184, 0.1);
-}
-
-/* Botão dentro da caixa de publicação */
-#upperPostDiv button,
-#upperPostDiv input[type="button"],
-#upperPostDiv input[type="submit"] {
-  background-color: #1d63b8;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  float: right;
-  margin-top: 0.75rem;
-  transition: background-color 0.2s;
-}
-
-#upperPostDiv button:hover,
-#upperPostDiv input[type="button"]:hover,
-#upperPostDiv input[type="submit"]:hover {
-  background-color: #154e92;
-}
-
-/* --- Estilização dos Posts Gerados Dinamicamente (#postsFetchDiv) --- */
+/* --- Estilização dos Posts Gerados Dinamicamente --- */
 #postsFetchDiv > div {
   background-color: #ffffff;
   border-radius: 12px;
@@ -190,15 +133,15 @@ main {
   margin-bottom: 1.5rem;
 }
 
-/* Cabeçalho do post (Nome do usuário e ícone) */
-#postsFetchDiv > div > div:first-child {
+/* Cabeçalho do Post (Ícone do autor + Nome) */
+#postsFetchDiv > div > div:nth-child(1) {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-#postsFetchDiv > div > div:first-child img {
+#postsFetchDiv > div > div:nth-child(1) img {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -206,73 +149,83 @@ main {
   background-color: #1d63b8;
 }
 
-#postsFetchDiv > div > div:first-child h3 {
+#postsFetchDiv > div > div:nth-child(1) h3 {
   font-size: 0.95rem;
   font-weight: 600;
   color: #0f172a;
 }
 
-/* Conteúdo/Texto do post */
-#postsFetchDiv p {
+/* Conteúdo/Texto do Post */
+#postsFetchDiv > div > div:nth-child(2) {
+  margin-bottom: 1rem;
+}
+
+#postsFetchDiv > div > div:nth-child(2) p {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #334155;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Imagem opcional no corpo do post */
-#postsFetchDiv img.post-media {
+#postsFetchDiv > div > div:nth-child(2) img {
   max-width: 100%;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-/* Contadores de Likes e Comentários */
-#postsFetchDiv .post-counters, 
-#postsFetchDiv p + p {
-  display: inline-block;
+/* Ícones e Contadores (Likes e Comentários) */
+#postsFetchDiv > div > div:nth-child(2) img[src*="like"], 
+#postsFetchDiv > div > div:nth-child(2) img[src*="comment"] {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+#postsFetchDiv > div > div:nth-child(2) p:nth-of-type(n+2) {
+  display: inline-flex;
+  align-items: center;
   margin-right: 1.5rem;
   font-size: 0.85rem;
   color: #64748b;
   font-weight: 500;
 }
 
-/* --- Secção de Comentários em cada Post --- */
-#postsFetchDiv > div > div:last-child {
-  margin-top: 1rem;
-  border-top: 1px solid #f1f5f9;
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* Comentário individual gerado */
-#postsFetchDiv > div > div:last-child > div {
+/* --- Bloco de Comentários Gerados no Loop --- */
+#postsFetchDiv > div > div:nth-child(n+3) {
   background-color: #f8fafc;
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
+  margin-top: 0.75rem;
+  border: 1px solid #f1f5f9;
 }
 
-#postsFetchDiv > div > div:last-child > div img {
+/* Conteúdo interno do comentário gerado pelo JS */
+#postsFetchDiv > div > div:nth-child(n+3) > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) img {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   object-fit: cover;
+  background-color: #cbd5e1;
 }
 
-#postsFetchDiv > div > div:last-child h4 {
+#postsFetchDiv > div > div:nth-child(n+3) h4 {
   font-size: 0.85rem;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
 }
 
-#postsFetchDiv > div > div:last-child p {
+#postsFetchDiv > div > div:nth-child(n+3) p {
   font-size: 0.85rem;
   color: #475569;
   margin-bottom: 0;
+  line-height: 1.4;
 }

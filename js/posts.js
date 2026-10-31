@@ -110,11 +110,6 @@ async function show_posts(posts, users){
         const postCommentCounter = document.createElement("p");
         const CommentIcon = document.createElement("img");
 
-        const postComment = document.createElement("div");
-        const postCommentUserIcon = document.createElement("img");
-        const postCommentContent = document.createElement("div");
-        const postCommentUsername = document.createElement("h4");
-        const postCommentText = document.createElement("p");
 
         //-------SETTING postDiv TO RECEIVE POSTS-------
         postHeader.appendChild(postUsernameIcon);
@@ -127,23 +122,38 @@ async function show_posts(posts, users){
         postContent.appendChild(CommentIcon);
         postContent.appendChild(postCommentCounter);
 
-        postCommentContent.appendChild(postCommentUsername);
-        postCommentContent.appendChild(postCommentText);
+       
 
         postComment.appendChild(postCommentUserIcon);
-        postComment.appendChild(postCommentContent);
-
+        
         postDiv.appendChild(postHeader);
         postDiv.appendChild(postContent);
-        postDiv.appendChild(postComment);
-
+        
         const user = users[post.usuario-1];
         
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
-
+        
         postLikeCounter.textContent = "❤️  " + (post.likes).length;
         postCommentCounter.textContent = "💬  " + (post.comentarios).length;
+
+        for(let i=0; i<post.comentarios.length; i++){
+            const postComment = document.createElement("div");
+            const postCommentUserIcon = document.createElement("img");
+            const postCommentContent = document.createElement("div");
+            const postCommentUsername = document.createElement("h4");
+            const postCommentText = document.createElement("p");
+
+            postCommentUsername.textContent = users[post.comentarios[i].usuario-1].nome;
+            postCommentText.textContent = post.comentarios[i].texto;
+            
+            postCommentContent.appendChild(postCommentUserIcon);
+            postCommentContent.appendChild(postCommentUsername);
+            postCommentContent.appendChild(postCommentText);
+            postComment.appendChild(postCommentContent);
+            postDiv.appendChild(postComment);
+        }
+
         postsDiv.appendChild(postDiv);
     }
 }
