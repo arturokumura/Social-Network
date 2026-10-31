@@ -29,16 +29,20 @@ async function get_posts(){
     }
 }
 
-async function get_users(userId){
+async function get_users(){
     try{
-        const response = await fetch(postsUrl + "/usuarios/" + userId);
+        const response = await fetch(postsUrl + "/usuarios/");
 
         if(!response.ok){
             throw new Error("Fetch error: " + response.status);
         }
         
         const data = await response.json();
-        return data;
+        const users_list = [];
+        for(user of data){
+            users_list[user.id-1] = user;
+        }
+        return users_list;
     }
     catch(e){
         console.log("Error fetching posts: " + e.message);
@@ -87,7 +91,7 @@ postDiv.appendChild(postHeader);
 postDiv.appendChild(postContent);
 postDiv.appendChild(postComment);
 
-async function show_posts(posts){
+async function show_posts(posts, users){
     if(!posts){return};
 
     for(let post of posts){
@@ -133,10 +137,13 @@ async function show_posts(posts){
         postDiv.appendChild(postContent);
         postDiv.appendChild(postComment);
 
-        const user = await get_users(post.usuario);
-
+        const user = users[post.usuario-1];
+        
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
+
+        postLikeCounter.textContent = "❤️  " + (post.likes).length;
+        postCommentCounter.textContent = "💬  " + (post.comentarios).length;
         postsDiv.appendChild(postDiv);
     }
 }

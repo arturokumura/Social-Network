@@ -22,98 +22,166 @@ header {
   align-items: center;
   padding: 0.75rem 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 header img {
-  max-height: 40px; /* Impede que ultrapasse esta altura */
-  width: auto;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Controla rigorosamente o tamanho da imagem do logo */
-.logo-area img, .logo-icon {
-  height: 36px; /* Podes ajustar para 32px ou 40px se preferires */
+  max-height: 36px;
   width: auto;
   object-fit: contain;
 }
 
-/* Controla o tamanho do texto do logo ao lado da imagem */
-.logo-area span, .logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1e293b;
-}
-
-.user-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.user-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #f8fafc;
-  padding: 0.35rem 0.75rem;
-  border-radius: 50px;
-  border: 1px solid #e2e8f0;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.avatar-mini {
-  width: 28px;
-  height: 28px;
+#usernamePicture {
+  width: 32px;
+  height: 32px;
   background-color: #1d63b8;
   color: #ffffff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: bold;
 }
 
-.btn-sair {
+#headerUsername {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+  margin-left: -0.5rem; /* Ajuste para aproximar do avatar se necessário */
+}
+
+/* Agrupamento visual à direita do header (opcional se quiser juntar avatar, nome e botão) */
+.user-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#logoutButton {
   background-color: transparent;
   border: 1px solid #cbd5e1;
-  padding: 0.35rem 0.85rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   color: #475569;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
-.btn-sair:hover {
+#logoutButton:hover {
   background-color: #f1f5f9;
+  border-color: #94a3b8;
 }
 
-/* --- Layout Principal (Grid / Flex) --- */
-main {
-  max-width: 1200px;
-  width: 100%;
-  margin: 2rem auto;
-  padding: 0 1rem;
+/* --- Layout Principal (Grid com Aside e Main) --- */
+.feed-layout, body {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 1.5rem;
 }
 
-@media (max-width: 768px) {
-  main {
+/* Estrutura de colunas da página principal */
+body {
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 
+    "header header"
+    "aside main";
+}
+
+header {
+  grid-area: header;
+}
+
+#profileInfo {
+  grid-area: aside;
+  padding: 1.5rem;
+}
+
+main {
+  grid-area: main;
+  max-width: 850px;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  justify-self: start;
+}
+
+@media (max-width: 900px) {
+  body {
     grid-template-columns: 1fr;
+    grid-template-areas: 
+      "header"
+      "aside"
+      "main";
+  }
+  main {
+    padding: 1rem;
   }
 }
 
-/* --- Cartões Gerais --- */
-.card {
+/* --- Painel de Perfil (Aside) --- */
+#profileInfoDiv {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+/* --- Caixa Superior de Publicação (#upperPostDiv) --- */
+#upperPostDiv {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+#upperPostDiv textarea, 
+#upperPostDiv input[type="text"] {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem;
+  resize: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: #1e293b;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+#upperPostDiv textarea:focus {
+  border-color: #1d63b8;
+  box-shadow: 0 0 0 2px rgba(29, 99, 184, 0.1);
+}
+
+/* Botão dentro da caixa de publicação */
+#upperPostDiv button,
+#upperPostDiv input[type="button"],
+#upperPostDiv input[type="submit"] {
+  background-color: #1d63b8;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  float: right;
+  margin-top: 0.75rem;
+  transition: background-color 0.2s;
+}
+
+#upperPostDiv button:hover,
+#upperPostDiv input[type="button"]:hover,
+#upperPostDiv input[type="submit"]:hover {
+  background-color: #154e92;
+}
+
+/* --- Estilização dos Posts Gerados Dinamicamente (#postsFetchDiv) --- */
+#postsFetchDiv > div {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
@@ -122,177 +190,89 @@ main {
   margin-bottom: 1.5rem;
 }
 
-.card h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #1e293b;
-}
-
-/* --- Formulários (Entrar / Criar Conta) --- */
-.form-group {
-  margin-bottom: 0.85rem;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  outline: none;
-  background-color: #fff;
-  transition: border-color 0.2s;
-}
-
-input:focus {
-  border-color: #1d63b8;
-  box-shadow: 0 0 0 2px rgba(29, 99, 184, 0.1);
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #1d63b8;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 0.5rem;
-}
-
-.btn-primary:hover {
-  background-color: #154e92;
-}
-
-/* --- Caixa de Publicação ("O que você está pensando?") --- */
-.post-box textarea {
-  width: 100%;
-  min-height: 80px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0.8rem;
-  resize: none;
-  outline: none;
-  font-size: 0.95rem;
-}
-
-.post-box textarea:focus {
-  border-color: #1d63b8;
-}
-
-.post-box-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.75rem;
-}
-
-.btn-publicar {
-  background-color: #1d63b8;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* --- Cartão de Publicações (Feed) --- */
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.75rem;
-}
-
-.post-user-info {
+/* Cabeçalho do post (Nome do usuário e ícone) */
+#postsFetchDiv > div > div:first-child {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.post-author {
-  font-weight: 600;
+#postsFetchDiv > div > div:first-child img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #1d63b8;
+}
+
+#postsFetchDiv > div > div:first-child h3 {
   font-size: 0.95rem;
+  font-weight: 600;
   color: #0f172a;
 }
 
-.post-time {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.post-content {
+/* Conteúdo/Texto do post */
+#postsFetchDiv p {
   font-size: 0.95rem;
   line-height: 1.5;
   color: #334155;
   margin-bottom: 1rem;
 }
 
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+/* Imagem opcional no corpo do post */
+#postsFetchDiv img.post-media {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Contadores de Likes e Comentários */
+#postsFetchDiv .post-counters, 
+#postsFetchDiv p + p {
+  display: inline-block;
+  margin-right: 1.5rem;
   font-size: 0.85rem;
   color: #64748b;
-  border-top: 1px solid #f1f5f9;
-  padding-top: 0.75rem;
+  font-weight: 500;
 }
 
-.like-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: inherit;
-}
-
-/* --- Secção de Comentários --- */
-.comments-section {
+/* --- Secção de Comentários em cada Post --- */
+#postsFetchDiv > div > div:last-child {
   margin-top: 1rem;
   border-top: 1px solid #f1f5f9;
-  padding-top: 0.75rem;
+  padding-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.comment {
+/* Comentário individual gerado */
+#postsFetchDiv > div > div:last-child > div {
   background-color: #f8fafc;
-  padding: 0.6rem 0.8rem;
+  padding: 0.65rem 0.85rem;
   border-radius: 8px;
-  font-size: 0.85rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
-.comment-author {
+#postsFetchDiv > div > div:last-child > div img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#postsFetchDiv > div > div:last-child h4 {
+  font-size: 0.85rem;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
-.comment-input-area {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.comment-input-area input {
-  flex: 1;
-  padding: 0.4rem 0.6rem;
+#postsFetchDiv > div > div:last-child p {
   font-size: 0.85rem;
-}
-
-.btn-comment {
-  background-color: #fff;
-  border: 1px solid #cbd5e1;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
+  color: #475569;
+  margin-bottom: 0;
 }
