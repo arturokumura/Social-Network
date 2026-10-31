@@ -61,7 +61,7 @@ body {
 }
 
 /* ===== Card do formulário ===== */
-#loginForm {
+#loginForm , #signUpForm {
     width: 100%;
     max-width: 402px;
     padding: 30px;
@@ -72,13 +72,13 @@ body {
     flex-direction: column;
 }
 
-#loginForm h2 {
+#loginForm h2, #signUpForm h2 {
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--text);
 }
 
-#loginForm p {
+#loginForm p, #signUpForm p {
     margin-top: 4px;
     margin-bottom: 22px;
     font-size: 0.85rem;
@@ -86,14 +86,14 @@ body {
 }
 
 /* ===== Labels e inputs ===== */
-#loginForm label {
+#loginForm label, #signUpForm label {
     margin-bottom: 8px;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text);
 }
 
-#loginForm input:not([type="submit"]) {
+#loginForm input:not([type="submit"]), #signUpForm input:not([type="submit"]) {
     width: 100%;
     height: 42px;
     margin-bottom: 20px;
@@ -108,17 +108,17 @@ body {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#loginForm input::placeholder {
+#loginForm input::placeholder, #signUpForm input::placeholder {
     color: var(--placeholder);
 }
 
-#loginForm input:not([type="submit"]):focus {
+#loginForm input:not([type="submit"]):focus, #signUpForm input:not([type="submit"]):focus{
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(24, 96, 163, 0.15);
 }
 
 /* ===== Botão ===== */
-#loginForm input[type="submit"] {
+#loginForm input[type="submit"],  #signUpForm input[type="submit"]{
     width: 100%;
     height: 42px;
     margin-top: 4px;
@@ -132,15 +132,15 @@ body {
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-#loginForm input[type="submit"]:hover {
+#loginForm input[type="submit"]:hover, #signUpForm input[type="submit"]:hover {
     background-color: var(--primary-hover);
 }
 
-#loginForm input[type="submit"]:active {
+#loginForm input[type="submit"]:active, #signUpForm input[type="submit"]:active {
     transform: scale(0.99);
 }
 
-#loginForm input[type="submit"]:focus-visible {
+#loginForm input[type="submit"]:focus-visible , #signUpForm input[type="submit"]:focus-visible {
     outline: 3px solid rgba(24, 96, 163, 0.35);
     outline-offset: 2px;
 }
@@ -163,7 +163,7 @@ body {
 
 /* ===== Telas pequenas ===== */
 @media (max-width: 480px) {
-    #loginForm {
+    #loginForm, #signUpForm {
         padding: 24px 20px;
     }
 
