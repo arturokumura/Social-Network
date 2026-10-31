@@ -128,12 +128,15 @@ async function show_posts(posts, users){
         
         postDiv.appendChild(postHeader);
         postDiv.appendChild(postContent);
+
         
         const user = users[post.usuario-1];
         
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
+        if (post.img) postImage.src = post.img;
+
         postLikeCounter.textContent = "❤️  " + (post.likes).length;
         postCommentCounter.textContent = "💬  " + (post.comentarios).length;
 
