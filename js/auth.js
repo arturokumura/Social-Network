@@ -1,5 +1,14 @@
 const url = "https://ifsp.trojahn.uk/redesocial";
 
+function showError(elementId, message) {
+    const el = document.querySelector("#" + elementId);
+    if (el) {
+        el.textContent = message;
+    } else {
+        alert(message);
+    }
+}
+
 //----------LOGIN---------
 async function login(email, password) {
     const user = {
@@ -16,20 +25,21 @@ async function login(email, password) {
     try {
         const response = await fetch(url + "/usuarios/login", op);
         if(!response.ok) {
-            throw new Error("Authentication error: " + response.status);
+            showError("loginError", "Login ou senha incorretos.");
+            return;
         }
 
         const data = await response.json();
         if(data.token) {
             localStorage.setItem("token", data.token);
-            console.log("Login successful!");
             window.location.replace("index.html")
         } else {
-            console.log("The server did not return a token: ", data);
+            showError("loginError", "Não foi possível entrar. Tente novamente.");
         }
     }
     catch(e) {
         console.log("Error authenticating with the server: " + e.message);
+        showError("loginError", "Erro de conexão com o servidor.");
     }
 }
 
@@ -51,6 +61,10 @@ async function signUp(name, email, password) {
         const response = await fetch(url + "/usuarios/", op);
         if(!response.ok) {
             throw new Error("Authentication error: " + response.status);
+        }
+        if(response.status === 409 || response.status === 400) {
+            showError("signUpError", "Esse login já está cadastrado ou os dados são inválidos.");
+            return;
         }
         window.location.replace("sucessScreen.html");
     }
