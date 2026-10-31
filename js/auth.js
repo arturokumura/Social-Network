@@ -52,10 +52,10 @@ async function signUp(name, email, password) {
         if(!response.ok) {
             throw new Error("Authentication error: " + response.status);
         }
-        alert("Registration completed successfully!");
-        window.location.replace("login.html");
+        window.location.replace("sucessScreen.html");
     }
     catch(e) {
+        alert("Não foi possível criar a conta. Tente novamente.");
         console.log("Error registering: " + e.message);
     }
 }
