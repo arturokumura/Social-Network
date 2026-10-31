@@ -145,6 +145,7 @@ async function show_posts(posts, users){
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
 
+            postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             postCommentUsername.textContent = users[post.comentarios[i].usuario-1].nome;
             postCommentText.textContent = post.comentarios[i].texto;
             
