@@ -122,16 +122,14 @@ async function show_posts(posts, users){
         postContent.appendChild(CommentIcon);
         postContent.appendChild(postCommentCounter);
 
-       
-
         postComment.appendChild(postCommentUserIcon);
         
         postDiv.appendChild(postHeader);
         postDiv.appendChild(postContent);
-
         
         const user = users[post.usuario-1];
         
+        postUsernameIcon.src = user.img;
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
