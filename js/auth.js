@@ -66,6 +66,11 @@ function logout() {
     window.location.replace("login.html");
 }
 
+const logOutButton = document.querySelector("#logoutButton");
+if (logOutButton) {
+    logOutButton.addEventListener("click", logout);
+}
+
 //----------SIGN UP FORM----------
 const signUpForm = document.querySelector("#signUpForm");
 if(signUpForm) {
