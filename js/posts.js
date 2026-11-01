@@ -49,6 +49,25 @@ async function get_users(){
     }
 }
 
+
+
+
+function like(post, likeCounter){
+    likeCounter.value = "❤️  " + (post.likes.length+1);
+    //this one can directly make the POST fetch, just sending the logged user id to add
+    //that like to that specific "post.likes".
+}
+
+//Both function have to make an API fetch in POST method(i think lol)
+
+function comment(post){
+    //actually, this one just opens an input:text for user to type a comment
+    //and its submit has to call another function to fetch the API in POST method,
+    //adding that comment of the logged user to that specific "post.comentarios".
+}
+
+
+
 //-------CREATING HTML ELEMENTS FOR EACH POST-------
 const postDiv = document.createElement("div");
 
@@ -105,9 +124,20 @@ async function show_posts(posts, users){
         const postContent = document.createElement("div");
         const postText = document.createElement("p");
         const postImage = document.createElement("img");
-        const postLikeCounter = document.createElement("p");
+
+        const postLikeCounter = document.createElement("input");
+        postLikeCounter.type = "button";
+        postLikeCounter.addEventListener("click", () => {
+            like(post, postLikeCounter)
+        });
+
+        const postCommentCounter = document.createElement("input");
+        postCommentCounter.type = "button";
+        postCommentCounter.addEventListener("click", () => {
+            comment(post);
+        })
+
         const LikeIcon = document.createElement("img");
-        const postCommentCounter = document.createElement("p");
         const CommentIcon = document.createElement("img");
 
 
@@ -129,14 +159,19 @@ async function show_posts(posts, users){
         
         const user = users[post.usuario-1];
         
-        postUsernameIcon.src = user.img;
+        if(user.img){
+            postUsernameIcon.src = user.img;
+        }else{
+            postUsernameIcon.src = `../images/icone_perfil1.png`;
+        }
+
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
         if (post.img) postImage.src = post.img;
 
-        postLikeCounter.textContent = "❤️  " + (post.likes).length;
-        postCommentCounter.textContent = "💬  " + (post.comentarios).length;
+        postLikeCounter.value = "🤍  " + (post.likes).length;
+        postCommentCounter.value = "💬  " + (post.comentarios).length;
 
         for(let i=0; i<post.comentarios.length; i++){
             const postComment = document.createElement("div");
@@ -145,7 +180,12 @@ async function show_posts(posts, users){
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
 
-            postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
+            if(users[post.comentarios[i].usuario-1].img){
+                postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
+            }else{
+                postCommentUserIcon.src = `../images/icone_perfil1.png`;
+            }
+
             postCommentUsername.textContent = users[post.comentarios[i].usuario-1].nome;
             postCommentText.textContent = post.comentarios[i].texto;
             

@@ -267,6 +267,47 @@ main {
   color: #374151;
 }
 
+#postsFetchDiv input[type="button"] {
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px; /* Estilo pílula moderno */
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+#postsFetchDiv input[type="button"]:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+  transform: translateY(-1px); /* Efeito subtil de elevação */
+}
+
+#postsFetchDiv input[type="button"]:active {
+  transform: translateY(0);
+}
+
+/* Estilo do contador de comentários */
+#postsFetchDiv p:has(> img), 
+#postsFetchDiv p[id*="CommentCounter"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 /* --- Celular --- */
 @media (max-width: 600px) {
   header {
