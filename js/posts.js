@@ -17,7 +17,6 @@ async function decodificarToken() {
     tokenDados.replaceAll("-", "+").replaceAll("_", "/");
     const loggedUserID = await JSON.parse(atob(tokenDados)).data;
     const loggedUserEmail = await JSON.parse(atob(tokenDados)).sub;
-    console.log(loggedUserID);
     localStorage.setItem("loggedUserId", loggedUserID);
     localStorage.setItem("loggedUserEmail", loggedUserEmail);
 }
@@ -104,26 +103,25 @@ async function like(idPost, e){
 
 async function comment(post, commentText){
     if(commentText.trim() != ""){
-        console.log(commentText);
+        const commentUser = {
+            id: localStorage.getItem("loggedUserID"),
+            texto: commentText
+        }
+        const op = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+            body: JSON.stringify(commentUser)
+        };
+
+        try{
+            const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
+            location.reload();
+
+        }catch(e){
+            console.log(e);
+        }
     }else{
         console.log("Você n comentou nada.");
-    }
-
-    const commentUser = {
-        id: localStorage.getItem("loggedUserID"),
-        texto: commentText
-    }
-
-    const op = {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
-        body: JSON.stringify()
-    };
-
-    try{''
-        const response = await fetch(postsUrl + `/posts/${post.id}`, op);
-    }catch(e){
-        console.log(e);
     }
 }
 
@@ -283,4 +281,3 @@ function createActionButton(iconClass, count){
 }
 
 get_posts();
-console.log(localStorage.getItem("token"))
