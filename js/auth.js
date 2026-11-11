@@ -1,5 +1,34 @@
 const url = "https://ifsp.trojahn.uk/redesocial";
 
+function checkToken() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.replace("login.html");
+        return false;
+    }
+
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1].replaceAll("-", "+").replaceAll("_", "/")));
+        console.log(payload);
+
+        if (payload.exp * 1000 < Date.now()) {
+            localStorage.removeItem("token");
+            alert("Sua sessão expirou. Faça login novamente.");
+            window.location.replace("login.html");
+            return false;
+        }
+
+        return true;   
+    }
+    catch (e) {
+        localStorage.removeItem("token");
+        window.location.replace("login.html");
+        return false;
+    }
+}
+
+
 function showError(elementId, message) {
     const el = document.querySelector("#" + elementId);
     if (el) {
