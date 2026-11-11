@@ -10,7 +10,6 @@ function checkToken() {
 
     try {
         const payload = JSON.parse(atob(token.split(".")[1].replaceAll("-", "+").replaceAll("_", "/")));
-        console.log(payload);
 
         if (payload.exp * 1000 < Date.now()) {
             localStorage.removeItem("token");
@@ -59,7 +58,6 @@ async function login(email, password) {
         }
 
         const data = await response.json();
-        console.log(data)
         
         if(data.token) {
             localStorage.setItem("token", data.token);
