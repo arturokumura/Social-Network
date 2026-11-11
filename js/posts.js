@@ -115,8 +115,11 @@ async function comment(post, commentText){
 
         try{
             const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
-            location.reload();
+            if(!response.ok){
+                throw new Error("Fetch error: " + response.status);
+            }
 
+            await get_posts();
         }catch(e){
             console.log(e);
         }
@@ -161,6 +164,9 @@ postDiv.appendChild(postComment);
 
 async function show_posts(posts, users){
     if(!posts){return};
+
+    postsDiv.replaceChildren();
+    
 
     for(let post of posts){
         //-------CREATING HTML ELEMENTS FOR EACH POST-------
@@ -249,9 +255,17 @@ async function show_posts(posts, users){
         icon.classList.add('icon-send');
         submit_comment_button.appendChild(icon);
 
-        userCommentBox.addEventListener("submit", (e)=> {
+        userCommentBox.addEventListener("submit", async(e)=> {
             e.preventDefault();
-            comment(post, userInput.value);
+            try{
+                submit_comment_button.disabled = true;
+                await comment(post, userInput.value);
+            }catch(e){
+                console.log(e.message);
+            }finally{
+                userInput.value = "";
+                submit_comment_button.disabled = false;
+            }
         });
 
         userCommentBox.appendChild(userInput);
