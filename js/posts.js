@@ -102,30 +102,30 @@ async function like(idPost, e){
 //Both function have to make an API fetch in POST method(i think lol)
 
 async function comment(post, commentText){
-    if(commentText.trim() != ""){
-        const commentUser = {
-            id: localStorage.getItem("loggedUserID"),
-            texto: commentText
-        }
-        const op = {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
-            body: JSON.stringify(commentUser)
-        };
-
-        try{
-            const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
-            if(!response.ok){
-                throw new Error("Fetch error: " + response.status);
-            }
-
-            await get_posts();
-        }catch(e){
-            console.log(e);
-        }
-    }else{
-        console.log("Você n comentou nada.");
+    const commentUser = {
+        id: localStorage.getItem("loggedUserID"),
+        texto: commentText
     }
+    const op = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+        body: JSON.stringify(commentUser)
+    };
+
+    try{
+        const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
+        if(!response.ok){
+            throw new Error("Fetch error: " + response.status);
+        }
+
+        await get_posts();
+    }catch(e){
+        console.log(e);
+    }
+}
+
+async function delete_comment(){
+
 }
 
 //-------CREATING HTML ELEMENTS FOR EACH POST-------
@@ -248,6 +248,18 @@ async function show_posts(posts, users){
         userCommentBox.classList.add('comment-box');
         userInput.classList.add('comment-input');
 
+        userInput.addEventListener("input", ()=>{
+            if(userInput.value.trim() != ""){
+                userInput.placeholder = "Comente algo...";
+                userCommentBox.classList.remove("empty-input");
+            }
+        });
+
+        userInput.addEventListener("blur", ()=>{
+            userInput.placeholder = "Comente algo...";
+            userCommentBox.classList.remove("empty-input");
+        })
+
         const submit_comment_button = document.createElement('button');
         submit_comment_button.className = 'submit-comment-button';
         const icon = document.createElement("span");
@@ -259,7 +271,14 @@ async function show_posts(posts, users){
             e.preventDefault();
             try{
                 submit_comment_button.disabled = true;
-                await comment(post, userInput.value);
+                if(userInput.value.trim() != ""){
+                    await comment(post, userInput.value);
+                }else{
+                    userInput.placeholder = "Digite algo para comentar";
+                    userCommentBox.classList.add("empty-input");
+                    return;
+                }
+                
             }catch(e){
                 console.log(e.message);
             }finally{
