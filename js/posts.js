@@ -102,15 +102,29 @@ getlikes()
 
 //Both function have to make an API fetch in POST method(i think lol)
 
-function comment(post, commentText){
+async function comment(post, commentText){
     if(commentText.trim() != ""){
         console.log(commentText);
     }else{
         console.log("Você n comentou nada.");
     }
-    //actually, this one just opens an input:text for user to type a comment
-    //and its submit has to call another function to fetch the API in POST method,
-    //adding that comment of the logged user to that specific "post.comentarios".
+
+    const commentUser = {
+        id: localStorage.getItem("loggedUserID"),
+        texto: commentText
+    }
+
+    const op = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+        body: JSON.stringify()
+    };
+
+    try{''
+        const response = await fetch(postsUrl + `/posts/${post.id}`, op);
+    }catch(e){
+        console.log(e);
+    }
 }
 
 //-------CREATING HTML ELEMENTS FOR EACH POST-------
