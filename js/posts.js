@@ -124,8 +124,22 @@ async function comment(post, commentText){
     }
 }
 
-async function delete_comment(){
+async function delete_comment(commentId){
+    const op = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+    };
 
+    try{
+        const response = await fetch(postsUrl + `/comentarios/${commentId}`, op);
+        if(!response.ok){
+            throw new Error("Erro na remoção do comentário.");
+        }
+
+        await get_posts();
+    }catch(e){
+        console.log(e.message);
+    }
 }
 
 //-------CREATING HTML ELEMENTS FOR EACH POST-------
@@ -224,6 +238,7 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
+            const commentDeleteButton = document.createElement("span");
 
             if(users[post.comentarios[i].usuario-1].img){
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
@@ -237,6 +252,17 @@ async function show_posts(posts, users){
             postCommentContent.appendChild(postCommentUserIcon);
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
+
+            if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
+                commentDeleteButton.classList.add("icon");
+                commentDeleteButton.classList.add("icon-bin");
+                commentDeleteButton.addEventListener("click", (e)=>{
+                    e.preventDefault();
+                    delete_comment(post.comentarios[i].id);
+                })
+                postCommentContent.appendChild(commentDeleteButton);
+            }
+
             postComment.appendChild(postCommentContent);
             postDiv.appendChild(postComment);
         }
