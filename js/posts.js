@@ -12,9 +12,23 @@ const upperPostDiv = document.querySelector("#upperPostDiv");
 const postsDiv = document.querySelector("#postsFetchDiv");
 
 
+async function decodificarToken() {
+    const tokenDados = localStorage.getItem("token").split(".")[1];
+    tokenDados.replaceAll("-", "+").replaceAll("_", "/");
+    const loggedUserID = await JSON.parse(atob(tokenDados)).data;
+    const loggedUserEmail = await JSON.parse(atob(tokenDados)).sub;
+    console.log(loggedUserID);
+    localStorage.setItem("loggedUserId", loggedUserID);
+    localStorage.setItem("loggedUserEmail", loggedUserEmail);
+}
+
+decodificarToken()
 async function get_posts(){
     try{
-        const response = await fetch(postsUrl + "/posts");
+        const token = localStorage.getItem("token");
+        const response = await fetch(postsUrl + "/posts/", {
+            headers: { "Authorization": "Bearer " + token }
+        });
 
         if(!response.ok){
             throw new Error("Fetch error: " + response.status);
@@ -31,7 +45,10 @@ async function get_posts(){
 
 async function get_users(){
     try{
-        const response = await fetch(postsUrl + "/usuarios/");
+        const token = localStorage.getItem("token");
+        const response = await fetch(postsUrl + "/usuarios/", {
+            headers: { "Authorization": "Bearer " + token }
+        });
 
         if(!response.ok){
             throw new Error("Fetch error: " + response.status);
@@ -49,15 +66,31 @@ async function get_users(){
     }
 }
 
+async function getlikes(idPost){
 
-
-
-function like(post, likeCounter, user){
-    console.log(post);
-    console.log(likeCounter);
     //this one can directly make the POST fetch, just sending the logged user id to add
     //that like to that specific "post.likes".
+    try {
+        const token = localStorage.getItem("token")
+        
+        let op = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token},
+        }
+        const response = await fetch(postsUrl + "/posts/" + idPost + '/' + "likes", op);
+        
+        if(!response.ok) {
+            throw new Error("Fetch error: " + response.status);
+        }
+
+        await response.json();
+        console.log(response);
+    } catch(e) {
+        console.log(e.message);
+    }
 }
+
+getlikes()
 
 //Both function have to make an API fetch in POST method(i think lol)
 
@@ -228,3 +261,4 @@ function createActionButton(iconClass, count){
 }
 
 get_posts();
+console.log(localStorage.getItem("token"))

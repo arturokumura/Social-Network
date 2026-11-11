@@ -30,6 +30,8 @@ async function login(email, password) {
         }
 
         const data = await response.json();
+        console.log(data)
+        
         if(data.token) {
             localStorage.setItem("token", data.token);
             window.location.replace("index.html")
