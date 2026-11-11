@@ -1,5 +1,5 @@
 const postsUrl = "https://ifsp.trojahn.uk/redesocial";
-
+checkToken();
 //-------HTML/CSS SELECTORS-------
 const userPic = document.querySelector("#usernamePicture");
 const headerUsername = document.querySelector("#headerUsername");
@@ -23,6 +23,7 @@ async function decodificarToken() {
 }
 
 decodificarToken()
+
 async function get_posts(){
     try{
         const token = localStorage.getItem("token");
@@ -74,7 +75,9 @@ async function get_users(){
     }
 }
 
-async function like(idPost){
+async function like(idPost, e){
+    if(e) e.preventDefault()
+        if (!checkToken()) return false; 
     //this one can directly make the POST fetch, just sending the logged user id to add
     //that like to that specific "post.likes".
     try {
@@ -92,12 +95,10 @@ async function like(idPost){
 
         await response.json();
         console.log(response);
-    } catch(e) {
-        console.log(e.message);
+    } catch(error) {
+        console.log(error.message);
     }
 }
-
-
 
 //Both function have to make an API fetch in POST method(i think lol)
 
