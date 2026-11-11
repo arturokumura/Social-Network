@@ -113,3 +113,21 @@ if(loginForm) {
     });
 }
 
+
+async function authFetch(path, options = {}) {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(url + path, {
+        ...options,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+        logout();
+    }
+
+    return response;
+}
