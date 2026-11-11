@@ -46,11 +46,12 @@ async function login(email, password) {
 }
 
 //----------CADASTRAR---------
-async function signUp(name, email, password) {
+async function signUp(name, email, password, img) {
     const newUser = {
         nome: name,
         login: email,
         senha: password,
+        img: img
     };
 
     const op = {
@@ -95,7 +96,8 @@ if(signUpForm) {
     const username = document.querySelector("#signUpInputUsername").value;
     const email = document.querySelector("#signUpInputEmail").value;
     const password = document.querySelector("#signUpInputPassword").value;
-    signUp(username, email, password);
+    const img = document.querySelector("#signUpInputUsernamePic").value;
+    signUp(username, email, password, img);
     })
 }
 

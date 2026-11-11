@@ -36,6 +36,13 @@ async function get_posts(){
         
         const postsData = await response.json();
         const usersData = await get_users();
+        const myId = Number(localStorage.getItem("idUsuario"));
+        const username = usersData.find(u => u && u.id === myId);
+
+        if (username) {
+            userPic.src = username.img;
+            headerUsername.textContent = username.nome;
+        }
         show_posts(postsData, usersData);
     }
     catch(e){
@@ -55,6 +62,7 @@ async function get_users(){
         }
         
         const data = await response.json();
+        localStorage.setItem("idUsuario", data.id);
         const users_list = [];
         for(user of data){
             users_list[user.id-1] = user;

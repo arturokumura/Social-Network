@@ -171,3 +171,28 @@ body {
         font-size: 1.6rem;
     }
 }
+
+#signUpInputUsernamePic {
+    width: 100%;
+    margin: 6px 0 16px 0;
+    font-size: 13px;
+}
+
+#signUpInputUsernamePic::file-selector-button {
+    padding: 8px 12px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1a5fa5;
+    color: white;
+    cursor: pointer;
+}
+
+#preview {
+    display: none;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+}
