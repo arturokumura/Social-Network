@@ -52,21 +52,25 @@ async function get_users(){
 
 
 
-function like(post, likeCounter){
-    likeCounter.value = "❤️  " + (post.likes.length+1);
+function like(post, likeCounter, user){
+    console.log(post);
+    console.log(likeCounter);
     //this one can directly make the POST fetch, just sending the logged user id to add
     //that like to that specific "post.likes".
 }
 
 //Both function have to make an API fetch in POST method(i think lol)
 
-function comment(post){
+function comment(post, commentText){
+    if(commentText.trim() != ""){
+        console.log(commentText);
+    }else{
+        console.log("Você n comentou nada.");
+    }
     //actually, this one just opens an input:text for user to type a comment
     //and its submit has to call another function to fetch the API in POST method,
     //adding that comment of the logged user to that specific "post.comentarios".
 }
-
-
 
 //-------CREATING HTML ELEMENTS FOR EACH POST-------
 const postDiv = document.createElement("div");
@@ -78,10 +82,6 @@ const postUsernameIcon = document.createElement("img");
 const postContent = document.createElement("div");
 const postText = document.createElement("p");
 const postImage = document.createElement("img");
-const postLikeCounter = document.createElement("p");
-const LikeIcon = document.createElement("img");
-const postCommentCounter = document.createElement("p");
-const CommentIcon = document.createElement("img");
 
 const postComment = document.createElement("div");
 const postCommentUserIcon = document.createElement("img");
@@ -95,10 +95,6 @@ postHeader.appendChild(postUsername);
 
 postContent.appendChild(postText);
 postContent.appendChild(postImage);
-postContent.appendChild(LikeIcon);
-postContent.appendChild(postLikeCounter);
-postContent.appendChild(CommentIcon);
-postContent.appendChild(postCommentCounter);
 
 postCommentContent.appendChild(postCommentUsername);
 postCommentContent.appendChild(postCommentText);
@@ -125,21 +121,18 @@ async function show_posts(posts, users){
         const postText = document.createElement("p");
         const postImage = document.createElement("img");
 
-        const postLikeCounter = document.createElement("input");
-        postLikeCounter.type = "button";
-        postLikeCounter.addEventListener("click", () => {
-            like(post, postLikeCounter)
+        const postActions = document.createElement('div');
+        postActions.className = 'post-actions';
+
+        const likeBtn = createActionButton('icon-heart', post.likes.length);
+
+        likeBtn.addEventListener('click', () => {
+          like(post, post.likes.length);
         });
 
-        const postCommentCounter = document.createElement("input");
-        postCommentCounter.type = "button";
-        postCommentCounter.addEventListener("click", () => {
-            comment(post);
-        })
+        postActions.appendChild(likeBtn);
 
-        const LikeIcon = document.createElement("img");
-        const CommentIcon = document.createElement("img");
-
+        postContent.appendChild(postActions);
 
         //-------SETTING postDiv TO RECEIVE POSTS-------
         postHeader.appendChild(postUsernameIcon);
@@ -147,10 +140,6 @@ async function show_posts(posts, users){
 
         postContent.appendChild(postText);
         postContent.appendChild(postImage);
-        postContent.appendChild(LikeIcon);
-        postContent.appendChild(postLikeCounter);
-        postContent.appendChild(CommentIcon);
-        postContent.appendChild(postCommentCounter);
 
         postComment.appendChild(postCommentUserIcon);
         
@@ -169,9 +158,6 @@ async function show_posts(posts, users){
         postText.textContent = post.texto;
         
         if (post.img) postImage.src = post.img;
-
-        postLikeCounter.value = "🤍  " + (post.likes).length;
-        postCommentCounter.value = "💬  " + (post.comentarios).length;
 
         for(let i=0; i<post.comentarios.length; i++){
             const postComment = document.createElement("div");
@@ -196,8 +182,49 @@ async function show_posts(posts, users){
             postDiv.appendChild(postComment);
         }
 
+        const userCommentBox = document.createElement('form');
+
+        const userInput = document.createElement('input');
+        userInput.placeholder = "Comente algo...";
+        userCommentBox.classList.add('comment-box');
+        userInput.classList.add('comment-input');
+
+        const submit_comment_button = document.createElement('button');
+        submit_comment_button.className = 'submit-comment-button';
+        const icon = document.createElement("span");
+        icon.classList.add('icon');
+        icon.classList.add('icon-send');
+        submit_comment_button.appendChild(icon);
+
+        userCommentBox.addEventListener("submit", (e)=> {
+            e.preventDefault();
+            comment(post, userInput.value);
+        });
+
+        userCommentBox.appendChild(userInput);
+        userCommentBox.appendChild(submit_comment_button);
+        postDiv.appendChild(userCommentBox);
+
         postsDiv.appendChild(postDiv);
     }
+}
+
+function createActionButton(iconClass, count){
+    const input = document.createElement('button');
+    input.className = 'action-btn';
+
+    const icon = document.createElement("span");
+    icon.classList.add('icon');
+    icon.classList.add(`${iconClass}`);
+
+    const number = document.createElement("span");
+    number.classList.add('count');
+    number.textContent = count;
+
+    input.appendChild(icon);
+    input.appendChild(number);
+
+    return input;
 }
 
 get_posts();
