@@ -74,8 +74,7 @@ async function get_users(){
     }
 }
 
-async function getlikes(idPost){
-
+async function like(idPost){
     //this one can directly make the POST fetch, just sending the logged user id to add
     //that like to that specific "post.likes".
     try {
@@ -98,7 +97,7 @@ async function getlikes(idPost){
     }
 }
 
-getlikes()
+
 
 //Both function have to make an API fetch in POST method(i think lol)
 
@@ -182,7 +181,7 @@ async function show_posts(posts, users){
         const likeBtn = createActionButton('icon-heart', post.likes.length);
 
         likeBtn.addEventListener('click', () => {
-          like(post, post.likes.length);
+          like(post.id);
         });
 
         postActions.appendChild(likeBtn);
