@@ -118,29 +118,43 @@ async function like(idPost){
 //Both function have to make an API fetch in POST method(i think lol)
 
 async function comment(post, commentText){
-    if(commentText.trim() != ""){
-        const commentUser = {
-            id: localStorage.getItem("loggedUserID"),
-            texto: commentText
-        }
-        const op = {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
-            body: JSON.stringify(commentUser)
-        };
+    const commentUser = {
+        id: localStorage.getItem("loggedUserID"),
+        texto: commentText
+    }
+    const op = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+        body: JSON.stringify(commentUser)
+    };
 
-        try{
-            const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
-            if(!response.ok){
-                throw new Error("Fetch error: " + response.status);
-            }
-
-            await get_posts();
-        }catch(e){
-            console.log(e);
+    try{
+        const response = await fetch(postsUrl + `/posts/${post.id}/comentarios`, op);
+        if(!response.ok){
+            throw new Error("Fetch error: " + response.status);
         }
-    }else{
-        console.log("Você n comentou nada.");
+
+        await get_posts();
+    }catch(e){
+        console.log(e);
+    }
+}
+
+async function delete_comment(commentId){
+    const op = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+    };
+
+    try{
+        const response = await fetch(postsUrl + `/comentarios/${commentId}`, op);
+        if(!response.ok){
+            throw new Error("Erro na remoção do comentário.");
+        }
+
+        await get_posts();
+    }catch(e){
+        console.log(e.message);
     }
 }
 
@@ -234,6 +248,7 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
+            const commentDeleteButton = document.createElement("span");
 
             if(users[post.comentarios[i].usuario-1].img){
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
@@ -247,6 +262,17 @@ async function show_posts(posts, users){
             postCommentContent.appendChild(postCommentUserIcon);
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
+
+            if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
+                commentDeleteButton.classList.add("icon");
+                commentDeleteButton.classList.add("icon-bin");
+                commentDeleteButton.addEventListener("click", (e)=>{
+                    e.preventDefault();
+                    delete_comment(post.comentarios[i].id);
+                })
+                postCommentContent.appendChild(commentDeleteButton);
+            }
+
             postComment.appendChild(postCommentContent);
             postDiv.appendChild(postComment);
         }
@@ -257,6 +283,18 @@ async function show_posts(posts, users){
         userInput.placeholder = "Comente algo...";
         userCommentBox.classList.add('comment-box');
         userInput.classList.add('comment-input');
+
+        userInput.addEventListener("input", ()=>{
+            if(userInput.value.trim() != ""){
+                userInput.placeholder = "Comente algo...";
+                userCommentBox.classList.remove("empty-input");
+            }
+        });
+
+        userInput.addEventListener("blur", ()=>{
+            userInput.placeholder = "Comente algo...";
+            userCommentBox.classList.remove("empty-input");
+        })
 
         const submit_comment_button = document.createElement('button');
         submit_comment_button.className = 'submit-comment-button';
@@ -286,7 +324,14 @@ async function show_posts(posts, users){
             e.preventDefault();
             try{
                 submit_comment_button.disabled = true;
-                await comment(post, userInput.value);
+                if(userInput.value.trim() != ""){
+                    await comment(post, userInput.value);
+                }else{
+                    userInput.placeholder = "Digite algo para comentar";
+                    userCommentBox.classList.add("empty-input");
+                    return;
+                }
+                
             }catch(e){
                 console.log(e.message);
             }finally{
