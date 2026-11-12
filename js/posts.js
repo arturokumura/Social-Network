@@ -1,5 +1,6 @@
 const postsUrl = "https://ifsp.trojahn.uk/redesocial";
 checkToken();
+
 //-------HTML/CSS SELECTORS-------
 const userPic = document.querySelector("#usernamePicture");
 const headerUsername = document.querySelector("#headerUsername");
@@ -12,13 +13,13 @@ const upperPostDiv = document.querySelector("#upperPostDiv");
 const postsDiv = document.querySelector("#postsFetchDiv");
 
 
-async function decodificarToken() {
+function decodificarToken() {
     const tokenDados = localStorage.getItem("token").split(".")[1];
-    tokenDados.replaceAll("-", "+").replaceAll("_", "/");
-    const loggedUserID = await JSON.parse(atob(tokenDados)).data;
-    const loggedUserEmail = await JSON.parse(atob(tokenDados)).sub;
-    localStorage.setItem("loggedUserId", loggedUserID);
-    localStorage.setItem("loggedUserEmail", loggedUserEmail);
+    const base64 = tokenDados.replaceAll("-", "+").replaceAll("_", "/");
+    const payload =  JSON.parse(atob(tokenDados));
+    const loggedUserEmail = JSON.parse(atob(tokenDados)).sub;
+    localStorage.setItem("loggedUserId", payload.data);
+    localStorage.setItem("loggedUserEmail", payload.sub);
 }
 
 decodificarToken()
@@ -36,14 +37,27 @@ async function get_posts(){
         
         const postsData = await response.json();
         const usersData = await get_users();
-        const myId = Number(localStorage.getItem("idUsuario"));
-        const username = usersData.find(u => u && u.id === myId);
 
-        if (username) {
-            userPic.src = username.img;
-            headerUsername.textContent = username.nome;
+        const myId = Number(localStorage.getItem("loggedUserId"));
+        const me = usersData.find(u => u && u.id === myId);
+
+        if (me) {
+            userPic.src = me.img;
+            headerUsername.textContent = me.nome;
+
+            if(me.img) {
+                userPic.textContent = ""; 
+    
+                userPic.style.backgroundImage = "url('" + me.img + "')";
+                userPic.style.backgroundSize = "cover";
+                userPic.style.backgroundPosition = "center";
+            } else {
+                userPic.textContent = me.nome[0].toUpperCase();
+            }   
         }
+
         show_posts(postsData, usersData);
+
     }
     catch(e){
         console.log("Error fetching posts: " + e.message);
@@ -62,9 +76,9 @@ async function get_users(){
         }
         
         const data = await response.json();
-        localStorage.setItem("idUsuario", data.id);
+
         const users_list = [];
-        for(user of data){
+        for(const user of data){
             users_list[user.id-1] = user;
         }
         return users_list;
@@ -74,11 +88,10 @@ async function get_users(){
     }
 }
 
-async function like(idPost, e){
-    if(e) e.preventDefault()
-        if (!checkToken()) return false; 
-    //this one can directly make the POST fetch, just sending the logged user id to add
-    //that like to that specific "post.likes".
+async function like(idPost){
+
+    if (!checkToken()) return false; 
+    
     try {
         const token = localStorage.getItem("token")
         
@@ -88,14 +101,17 @@ async function like(idPost, e){
         }
         const response = await fetch(postsUrl + "/posts/" + idPost + '/' + "likes", op);
         
-        if(!response.ok) {
-            throw new Error("Fetch error: " + response.status);
-        }
+        console.log("Status do like:", response.status);
 
-        await response.json();
-        console.log(response);
+        if(!response.ok) {
+            return false;
+        }
+    
+        console.log("Curtiu: " + response.status);
+        return true;
     } catch(error) {
         console.log(error.message);
+        return false;
     }
 }
 
@@ -185,10 +201,6 @@ async function show_posts(posts, users){
 
         const likeBtn = createActionButton('icon-heart', post.likes.length);
 
-        likeBtn.addEventListener('click', () => {
-          like(post.id);
-        });
-
         postActions.appendChild(likeBtn);
 
         postContent.appendChild(postActions);
@@ -199,8 +211,6 @@ async function show_posts(posts, users){
 
         postContent.appendChild(postText);
         postContent.appendChild(postImage);
-
-        postComment.appendChild(postCommentUserIcon);
         
         postDiv.appendChild(postHeader);
         postDiv.appendChild(postContent);
@@ -250,10 +260,27 @@ async function show_posts(posts, users){
 
         const submit_comment_button = document.createElement('button');
         submit_comment_button.className = 'submit-comment-button';
+
         const icon = document.createElement("span");
-        icon.classList.add('icon');
-        icon.classList.add('icon-send');
+        icon.className = "icon icon-send";
         submit_comment_button.appendChild(icon);
+
+        const likeIcon = likeBtn.querySelector('.icon');
+        const likeCount = likeBtn.querySelector('.count');
+
+        likeBtn.addEventListener('click', async () => {
+            if(likeIcon.classList.contains("icon-heart-filled")) {
+                likeIcon.className ="icon icon-heart";
+                likeCount.textContent = Number(likeCount.textContent) - 1;
+            } else {
+                const ok = await like(post.id);
+                console.log("deuCerto:", ok);  
+                if(ok) {
+                    likeIcon.className = "icon icon-heart-filled";
+                    likeCount.textContent = Number(likeCount.textContent) + 1;
+                }
+            }
+        });
 
         userCommentBox.addEventListener("submit", async(e)=> {
             e.preventDefault();
