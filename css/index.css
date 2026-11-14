@@ -15,11 +15,11 @@ body {
   color: #1f2937;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 300px minmax(0, 1fr);
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    "header"
-    "main";
+    "header header"
+    "profile main";
 }
 
 /* --- Header --- */
@@ -76,9 +76,71 @@ header img {
   background-color: #f4f1ea;
 }
 
-/* --- Layout central (sem a barra lateral) --- */
+/* --- Card de perfil (lateral esquerda, fixo na rolagem) --- */
+:root {
+  --header-height: 80px; /* mesma altura do header */
+}
+
 #profileInfo {
+  grid-area: profile;
+  align-self: start;
+  position: sticky;
+  top: 0;
+  padding: 2rem 0 0; /* só o espaço de cima; a largura é do card */
+}
+
+#profileInfoDiv {
+  /* 80% da largura do espaço lateral, centralizado (10% de cada lado) */
+  width: 80%;
+  margin: 0 auto;
+
+  /* 60% da altura disponível (tela menos o cabeçalho) */
+  height: calc((100vh - var(--header-height)) * 0.6);
+  min-height: 320px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e1d8;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+/* não mostra um cartão vazio antes do JS preencher */
+#profileInfoDiv:empty {
   display: none;
+}
+
+#profileInfoDiv img {
+  order: -1; /* foto no topo */
+  flex-shrink: 0;
+  width: clamp(96px, 50%, 180px); /* cresce com o card, até 180px */
+  aspect-ratio: 1 / 1;
+  height: auto;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #e3eefb;
+}
+
+/* nome */
+#profileInfoDiv p:first-of-type {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* e-mail */
+#profileInfoDiv p:last-of-type {
+  max-width: 100%;
+  font-size: 0.95rem;
+  color: #6b7280;
+  overflow-wrap: anywhere;
 }
 
 main {
@@ -580,4 +642,42 @@ main {
 #postsFetchDiv > div > div:nth-child(n+3) > div:has(.icon-bin) h4,
 #postsFetchDiv > div > div:nth-child(n+3) > div:has(.icon-bin) p {
   padding-right: 3rem;
+}
+
+/* telas largas: três colunas, feed centralizado e card no espaço da esquerda */
+@media (min-width: 1440px) {
+  body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 820px) minmax(0, 1fr);
+    grid-template-areas:
+      "header header header"
+      "profile main .";
+  }
+}
+
+/* telas pequenas: o card vai para cima do feed, sem tamanho especial */
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "header"
+      "profile"
+      "main";
+  }
+
+  #profileInfo {
+    position: static;
+    padding: 1rem 0.75rem 0;
+  }
+
+  #profileInfoDiv {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 1.25rem;
+  }
+
+  #profileInfoDiv img {
+    width: 72px;
+  }
 }

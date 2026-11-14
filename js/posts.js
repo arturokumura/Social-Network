@@ -22,7 +22,28 @@ function decodificarToken() {
     localStorage.setItem("loggedUserEmail", payload.sub);
 }
 
-decodificarToken()
+decodificarToken();
+
+async function get_user_info(user){
+    if(user){
+        const profileCardName = document.createElement("p");
+        profileCardName.textContent = user.nome;
+
+        const profileCardEmail = document.createElement("p");
+        profileCardEmail.textContent = localStorage.getItem("loggedUserEmail");
+
+        const profileCardPic = document.createElement("img");
+        if(user.img){
+            profileCardPic.src = user.img;
+        }else{
+            profileCardPic.src = "../images/icone_perfil1.png";
+        }
+
+        profileInfoDiv.appendChild(profileCardName);
+        profileInfoDiv.appendChild(profileCardEmail);
+        profileInfoDiv.appendChild(profileCardPic);
+    }
+}
 
 async function get_posts(){
     try{
@@ -56,6 +77,7 @@ async function get_posts(){
             }   
         }
 
+        get_user_info(me);
         show_posts(postsData, usersData);
 
     }
