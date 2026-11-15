@@ -388,7 +388,7 @@ async function show_posts(posts, users){
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
             
-            if(imageValid(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId")))){
+            if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
                 const commentDeleteButton = document.createElement("span");
                 commentDeleteButton.classList.add("icon");
                 commentDeleteButton.classList.add("icon-bin");
