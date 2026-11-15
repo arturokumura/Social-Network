@@ -211,6 +211,83 @@ async function edit_post(post, text, image){
     
 }
 
+function boxDeleteConfirm(deletePost) {
+    const backgroundBox = document.createElement("div");
+    const box = document.createElement("div");
+
+    const iconWrap = document.createElement("div");
+    const binPicDiv = document.createElement("span");
+
+    const title = document.createElement("h3");
+    const text = document.createElement("p");
+
+    const buttons = document.createElement("div");
+    const cancelButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
+    
+
+    backgroundBox.className = "confirm-overlay";
+    box.className = "confirm-box";
+    iconWrap.className = "confirm-icon";
+    binPicDiv.className = "icon icon-bin";
+    buttons.className = "confirm-buttons";
+    cancelButton.className = "confirm-cancel";
+    deleteButton.className = "confirm-ok";
+
+    title.textContent = "Excluir post?";
+    text.textContent = "Essa ação não pode ser desfeita.";
+    cancelButton.textContent = "Cancelar";
+    deleteButton.textContent = "Excluir";
+    cancelButton.type = "button";
+    deleteButton.type = "button";
+
+
+    iconWrap.appendChild(binPicDiv);       
+    buttons.appendChild(cancelButton);     
+    buttons.appendChild(deleteButton);
+
+    box.appendChild(iconWrap);             
+    box.appendChild(title);
+    box.appendChild(text);
+    box.appendChild(buttons);
+
+    backgroundBox.appendChild(box);       
+
+    document.body.appendChild(backgroundBox);
+
+    cancelButton.addEventListener("click", () => {
+        backgroundBox.remove(); 
+    });
+
+    deleteButton.addEventListener("click", () => {
+        backgroundBox.remove();
+        deletePost();
+    });
+}
+
+async function delete_post(id) {
+    if (!checkToken()) return;
+
+    try {
+        const op = {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")}
+        };
+
+        const response = await fetch(postsUrl + "/posts/" + id, op);
+
+        if(!response.ok) {
+            throw new Error("Erro ao deletar post " + response.status)
+        }
+
+        await get_posts();
+
+    } catch(error) {
+        console.log(error.message);
+    }
+}
+
+
 async function like(idPost){
 
     if (!checkToken()) return false; 
@@ -410,6 +487,7 @@ async function show_posts(posts, users){
         
         if(post.usuario == Number(localStorage.getItem("loggedUserId"))){
             
+            //Edit post
             let editPostButton = document.createElement("button");
             editPostButton.classList.add('icon');
             editPostButton.classList.add('icon-pencil');
@@ -450,6 +528,24 @@ async function show_posts(posts, users){
                 
             })
             postContent.appendChild(editPostButton);
+
+
+            //Delete post
+            const deletePostButton = document.createElement("button");
+            deletePostButton.type = "button";
+            deletePostButton.className = "delete";
+            deletePostButton.title = "Excluir post";
+
+            const deleteIcon = document.createElement("span");
+            deleteIcon.className = "icon icon-bin";
+            deletePostButton.appendChild(deleteIcon);
+
+            deletePostButton.addEventListener("click", (e) => {
+                boxDeleteConfirm(() => {
+                    delete_post(post.id);
+                });
+            });
+            postHeader.appendChild(deletePostButton); 
         }
         
         postDiv.appendChild(postContent);
