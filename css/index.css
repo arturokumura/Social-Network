@@ -1028,3 +1028,138 @@ main {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* --- Editar post: lápis no canto do card --- */
+#postsFetchDiv > div {
+  position: relative; /* o lápis se posiciona em relação ao card */
+}
+
+/* o lápis do POST é filho do conteúdo do post; o dos comentários fica dentro do balão */
+#postsFetchDiv > div > div:nth-child(2) > .icon-pencil {
+  position: absolute;
+  top: calc(1.75rem + 8px); /* centraliza com o avatar de 48px do cabeçalho */
+  right: 2rem;              /* alinha com a borda do conteúdo */
+  margin: 0;                /* anula a margem do lápis dos comentários */
+  justify-self: auto;
+  align-self: auto;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > .icon-pencil::before {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 600px) {
+  #postsFetchDiv > div > div:nth-child(2) > .icon-pencil {
+    top: calc(1.25rem + 8px);
+    right: 1.25rem;
+  }
+}
+
+/* --- Editar post: formulário (campo + botão de salvar) --- */
+#postsFetchDiv > div > div:nth-child(2) > form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.edit-post-input {
+  order: 1; /* campo à esquerda, mesmo com o botão vindo antes no código */
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 1rem;
+  background-color: #ffffff;
+  border: 1px solid #d6d1c6;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #1f2937;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-post-input::placeholder {
+  color: #9ca3af;
+}
+
+.edit-post-input:focus {
+  outline: none;
+  border-color: #1760a8;
+  box-shadow: 0 0 0 3px rgba(23, 96, 168, 0.12);
+}
+
+/* --- Botão de salvar (ícone de disquete) --- */
+.icon-save {
+  order: 2;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background-color: #1760a8;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.icon-save:hover {
+  background-color: #124d87;
+}
+
+.icon-save:active {
+  transform: scale(0.95);
+}
+
+.icon-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-save::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/%3E%3Cpolyline points='17 21 17 13 7 13 7 21'/%3E%3Cpolyline points='7 3 7 8 15 8'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/%3E%3Cpolyline points='17 21 17 13 7 13 7 21'/%3E%3Cpolyline points='7 3 7 8 15 8'/%3E%3C/svg%3E");
+}
+
+/* --- Tentou salvar vazio (mesmo efeito da caixa de comentário) --- */
+#postsFetchDiv > div > div:nth-child(2) > form.empty-input .edit-post-input {
+  border-color: #d64545;
+  background-color: #fbeded;
+  animation: shake 0.35s ease;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form.empty-input .edit-post-input::placeholder {
+  color: #c25a5a;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form.empty-input .edit-post-input:focus {
+  border-color: #d64545;
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.15);
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form.empty-input .icon-save {
+  background-color: #d64545;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #postsFetchDiv > div > div:nth-child(2) > form.empty-input .edit-post-input {
+    animation: none;
+  }
+}

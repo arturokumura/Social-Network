@@ -185,6 +185,32 @@ publishPostButton.addEventListener("click", async () => {
     }
 })
 
+async function edit_post(post, text, image){
+    let editedPost = {
+        texto: text,
+        img: image 
+    }
+
+    const op = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+        body: JSON.stringify(editedPost)
+    }
+    try{
+        let response = await fetch(postsUrl + `/posts/${post.id}`, op);
+
+        if(!response.ok){
+            throw new Error("Erro na edição do comentário.");
+        }
+
+        await response.json();
+        await get_posts();
+    }catch(e){
+        console.log(e.message);
+    }
+    
+}
+
 async function like(idPost){
 
     if (!checkToken()) return false; 
@@ -370,7 +396,6 @@ async function show_posts(posts, users){
         postContent.appendChild(postImage);
         
         postDiv.appendChild(postHeader);
-        postDiv.appendChild(postContent);
         
         const user = users[post.usuario-1];
         
@@ -379,10 +404,56 @@ async function show_posts(posts, users){
         }else{
             postUsernameIcon.src = `../images/icone_perfil1.png`;
         }
-
+        
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
+        if(post.usuario == Number(localStorage.getItem("loggedUserId"))){
+            
+            let editPostButton = document.createElement("button");
+            editPostButton.classList.add('icon');
+            editPostButton.classList.add('icon-pencil');
+            
+            editPostButton.addEventListener("click", (e)=>{
+                e.preventDefault();
+
+                let saveEditButton = document.createElement("button");
+                saveEditButton.classList.add('icon');
+                saveEditButton.classList.add('icon-save');
+                
+                postContent.removeChild(editPostButton);
+
+                let editPostBox = document.createElement("form");
+                let editPostInput = document.createElement("input");
+                let editPostImageInput = document.createElement("input");
+
+                editPostInput.classList.add("edit-post-input");
+                editPostImageInput.classList.add("edit-post-input");
+                editPostImageInput.placeholder = "Digite o link da imagem aqui";
+
+                if(post.img){editPostImageInput.value = post.img;}else{editPostImageInput.value = null}
+                editPostInput.value = post.texto;
+
+                postContent.removeChild(postText);
+
+                editPostBox.addEventListener("submit", (e)=>{
+                    e.preventDefault();
+                    edit_post(post, editPostInput.value, editPostImageInput.value);
+                })
+
+                eventListeners(editPostBox, editPostInput, saveEditButton);
+                
+                editPostBox.appendChild(saveEditButton);
+                editPostBox.appendChild(editPostInput);
+                editPostBox.appendChild(editPostImageInput);
+                postContent.appendChild(editPostBox);
+                
+            })
+            postContent.appendChild(editPostButton);
+        }
+        
+        postDiv.appendChild(postContent);
+
         if (imageValid(post.img)) postImage.src = post.img;
 
         for(let i=0; i<post.comentarios.length; i++){
