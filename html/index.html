@@ -21,9 +21,16 @@
 
     <main>
         <div id="upperPostDiv">
+
             <div id="picturePic"></div>
             <textarea id="message" name="message" rows="5" cols="33" placeholder="O que você está pensando?"></textarea>
-            <button type="submit" id="upperPostButton">Publicar</button>
+
+            <input type="text" id="imageUrl" placeholder="Cole o link da imagem (https://...)" hidden>
+
+             <div id="postButtons">
+            <button type="button" id="addImageButton">+</button>
+            <button type="button" id="upperPostButton">Publicar</button>
+    </div>
         </div>
 
         <div id="postsFetchDiv"></div>
