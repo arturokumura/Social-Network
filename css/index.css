@@ -644,6 +644,185 @@ main {
   padding-right: 3rem;
 }
 
+/* --- Botão de editar comentário (lápis) --- */
+#postsFetchDiv .icon-pencil {
+  /* mesma célula da lixeira, deslocado para a esquerda dela */
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  justify-self: end;
+  align-self: center;
+  margin-right: calc(0.5rem + 30px + 2px); /* margem da lixeira + largura dela + folga */
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+#postsFetchDiv .icon-pencil::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z'/%3E%3C/svg%3E");
+}
+
+#postsFetchDiv .icon-pencil:hover {
+  color: #1760a8;
+  background-color: #e3eefb;
+}
+
+#postsFetchDiv .icon-pencil:active {
+  transform: scale(0.92);
+}
+
+#postsFetchDiv .icon-pencil:focus-visible {
+  outline: 2px solid #1760a8;
+  outline-offset: 2px;
+}
+
+/* com lápis + lixeira, o texto precisa de mais espaço à direita.
+   Fica DEPOIS da regra da lixeira, para esta ter prioridade quando os dois existem. */
+#postsFetchDiv > div > div:nth-child(n+3) > div:has(.icon-pencil) h4,
+#postsFetchDiv > div > div:nth-child(n+3) > div:has(.icon-pencil) p {
+  padding-right: 5.5rem;
+}
+
+/* --- Campo de edição (no lugar do texto do comentário) --- */
+.comment-edit-input {
+  grid-column: 2;
+  grid-row: 2;
+  width: 100%;
+  padding: 0.2rem 5.5rem 0.75rem 1rem; /* mesmo espaçamento do texto, com folga para os botões */
+  background-color: #f4f1ea;
+  border: none;
+  border-radius: 0 0 12px 12px;
+  box-shadow: inset 0 -2px 0 #1760a8; /* linha azul embaixo indica o modo de edição */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.comment-edit-input:focus {
+  outline: none;
+}
+
+/* --- Edição de comentário (formulário dentro do balão) --- */
+
+/* o form é o "fundo" da parte de baixo do balão, onde ficava o texto */
+#postsFetchDiv > div > div:nth-child(n+3) > div > form {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* original: 0.9rem */
+  padding: 0.2rem 0.75rem 0.65rem 1rem;
+  background-color: #f4f1ea;
+  border-radius: 0 0 12px 12px;
+}
+
+/* campo menor e branco, para se destacar do fundo do balão */
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .comment-input {
+  padding: 0.45rem 0.8rem; /* original: 0.75rem 1rem */
+  background-color: #ffffff;
+  border: 1px solid #d6d1c6;
+  border-radius: 8px;
+  font-size: 0.85rem; /* original: 0.9rem */
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .comment-input:focus {
+  border-color: #1760a8;
+}
+
+/* botão de enviar da edição */
+.submit-edit_comment-button {
+  flex-shrink: 0;
+  width: 32px; /* original: 38px */
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  color: #1760a8;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-edit_comment-button:hover {
+  background-color: #e3eefb;
+}
+
+.submit-edit_comment-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submit-edit_comment-button .icon {
+  width: 15px; /* original: 18px */
+  height: 15px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* durante a edição, esconde lápis e lixeira (eles ficariam por cima do botão de enviar) */
+#postsFetchDiv > div > div:nth-child(n+3) > div:has(> form) .icon-pencil,
+#postsFetchDiv > div > div:nth-child(n+3) > div:has(> form) .icon-bin {
+  display: none;
+}
+
+/* --- Edição de comentário: tentou enviar vazio (igual à caixa principal) --- */
+#postsFetchDiv > div > div:nth-child(n+3) > div > form.empty-input .comment-input {
+  border-color: #d64545;
+  background-color: #fbeded;
+  animation: shake 0.35s ease;
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form.empty-input .comment-input::placeholder {
+  color: #c25a5a;
+}
+
+/* mantém o vermelho mesmo com o campo focado */
+#postsFetchDiv > div > div:nth-child(n+3) > div > form.empty-input .comment-input:focus {
+  border-color: #d64545;
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.15);
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form.empty-input .submit-edit_comment-button {
+  color: #d64545;
+}
+
+/* respeita quem desativa animações no sistema */
+@media (prefers-reduced-motion: reduce) {
+  #postsFetchDiv > div > div:nth-child(n+3) > div > form.empty-input .comment-input {
+    animation: none;
+  }
+}
+
 /* telas largas: três colunas, feed centralizado e card no espaço da esquerda */
 @media (min-width: 1440px) {
   body {

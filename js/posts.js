@@ -172,7 +172,7 @@ async function comment(post, commentText){
 async function delete_comment(commentId){
     const op = {
         method: "DELETE",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")},
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")}
     };
 
     try{
@@ -184,6 +184,40 @@ async function delete_comment(commentId){
         await get_posts();
     }catch(e){
         console.log(e.message);
+    }
+}
+
+async function edit_comment(comment, input, commentContent, commentBox){
+    if(input.value.trim() == ""){
+        input.classList.add('empty-input');
+        throw new Error("Não há nada digitado.");
+    }
+    const newCommentUser = {
+        texto: input.value
+    }    
+    const op = {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        },
+        body: JSON.stringify(newCommentUser)
+    }
+
+    try{
+        let response = await fetch(postsUrl + `/comentarios/${comment.id}`, op);
+        if(!response.ok){
+            throw new Error("Erro na remoção do comentário.");
+        }
+        await get_posts();
+
+    }catch(e){
+        console.log(e.message);
+    }finally{
+        commentContent.removeChild(commentBox);
+        let comment = document.createElement("p");
+        comment.textContent = input.value;
+        commentContent.appendChild(comment);
     }
 }
 
@@ -277,22 +311,22 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
-            const commentDeleteButton = document.createElement("span");
-
+            
             if(users[post.comentarios[i].usuario-1].img){
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             }else{
                 postCommentUserIcon.src = `../images/icone_perfil1.png`;
             }
-
+            
             postCommentUsername.textContent = users[post.comentarios[i].usuario-1].nome;
             postCommentText.textContent = post.comentarios[i].texto;
             
             postCommentContent.appendChild(postCommentUserIcon);
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
-
+            
             if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
+                const commentDeleteButton = document.createElement("span");
                 commentDeleteButton.classList.add("icon");
                 commentDeleteButton.classList.add("icon-bin");
                 commentDeleteButton.addEventListener("click", (e)=>{
@@ -300,41 +334,80 @@ async function show_posts(posts, users){
                     delete_comment(post.comentarios[i].id);
                 })
                 postCommentContent.appendChild(commentDeleteButton);
-            }
+                
+                const editCommentButton = document.createElement('span');
+                editCommentButton.classList.add("icon");
+                editCommentButton.classList.add("icon-pencil");
 
+                editCommentButton.addEventListener("click", (e)=>{
+                    let editCommentBox = document.createElement('form');
+
+                    let comment = postCommentText.textContent;
+
+                    if(postCommentText){
+                        postCommentContent.removeChild(postCommentText);
+                    }
+
+                    const editInput = document.createElement("input");
+                    editInput.value = comment;
+                    editInput.classList.add('comment-input');
+
+                    const submit_edit_comment_button = document.createElement('button');
+                    submit_edit_comment_button.className = 'submit-edit_comment-button';
+        
+                    const icon_edit_submit_comment = document.createElement("span");
+                    icon_edit_submit_comment.className = "icon icon-send";
+                    submit_edit_comment_button.appendChild(icon_edit_submit_comment);
+
+                    editCommentBox.addEventListener("submit", ()=>{
+                        edit_comment(post.comentarios[i], editInput, postCommentContent, editCommentBox);
+                    })
+
+                    eventListeners(editCommentBox, editInput, submit_edit_comment_button);
+
+                    editCommentBox.appendChild(editInput);
+                    editCommentBox.appendChild(submit_edit_comment_button);
+                    editInput.focus();
+                    postCommentContent.appendChild(editCommentBox);
+                    e.preventDefault();
+                })                
+
+                postCommentContent.appendChild(editCommentButton);
+            }
+            
             postComment.appendChild(postCommentContent);
             postDiv.appendChild(postComment);
         }
-
-        const userCommentBox = document.createElement('form');
-
-        const userInput = document.createElement('input');
+        
+        let userCommentBox = document.createElement('form');
+        
+        let userInput = document.createElement('input');
         userInput.placeholder = "Comente algo...";
         userCommentBox.classList.add('comment-box');
         userInput.classList.add('comment-input');
-
+        
         userInput.addEventListener("input", ()=>{
             if(userInput.value.trim() != ""){
                 userInput.placeholder = "Comente algo...";
                 userCommentBox.classList.remove("empty-input");
             }
         });
-
+        
         userInput.addEventListener("blur", ()=>{
             userInput.placeholder = "Comente algo...";
             userCommentBox.classList.remove("empty-input");
-        })
-
+        });
+        
         const submit_comment_button = document.createElement('button');
         submit_comment_button.className = 'submit-comment-button';
-
-        const icon = document.createElement("span");
-        icon.className = "icon icon-send";
-        submit_comment_button.appendChild(icon);
+        
+        const icon_submit_comment = document.createElement("span");
+        icon_submit_comment.className = "icon icon-send";
+        submit_comment_button.appendChild(icon_submit_comment);
 
         const likeIcon = likeBtn.querySelector('.icon');
         const likeCount = likeBtn.querySelector('.count');
-
+        
         likeBtn.addEventListener('click', async () => {
             if(likeIcon.classList.contains("icon-heart-filled")) {
                 likeIcon.className ="icon icon-heart";
@@ -393,6 +466,42 @@ function createActionButton(iconClass, count){
     input.appendChild(number);
 
     return input;
+}
+
+function eventListeners(commentBox, commentInput, submitButton){
+    commentBox.addEventListener("submit", (e)=> {
+            e.preventDefault();
+            try{
+                submitButton.disabled = true;
+                if(commentInput.value.trim() == ""){
+                    commentInput.placeholder = "Digite algo para comentar";
+                    commentBox.classList.add("empty-input");
+                    commentInput.focus();
+                    return;
+                }
+            }catch(e){
+                console.log(e.message);
+            }finally{
+                commentInput.value = "";
+                submitButton.disabled = false;
+            }
+        });
+    
+    commentInput.addEventListener("input", (e)=>{
+        e.preventDefault();
+        if(commentInput.value.trim() == ""){
+            commentInput.placeholder = "Digite algo para comentar";
+            commentBox.classList.add("empty-input");
+            return;
+        }else{
+            commentBox.classList.remove("empty-input");
+        }
+    })
+    
+    commentInput.addEventListener("blur", ()=>{
+        commentInput.placeholder = "Digite algo para comentar";
+        commentBox.classList.remove("empty-input");
+    })
 }
 
 get_posts();
