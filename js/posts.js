@@ -574,5 +574,3 @@ function eventListeners(commentBox, commentInput, submitButton){
 }
 
 get_posts();
-get_posts();
-localStorage.removeItem("img");
