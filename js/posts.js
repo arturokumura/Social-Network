@@ -132,6 +132,12 @@ async function get_users(){
 const publishPostButton = document.querySelector("#upperPostButton");
 const publishPostPic = document.querySelector("#picturePic");
 const postTextarea = document.querySelector("#message");
+const addImageButton = document.querySelector("#addImageButton");
+const imageUrlInput = document.querySelector("#imageUrl");
+
+addImageButton.addEventListener("click", () => {
+    imageUrlInput.hidden = !imageUrlInput.hidden;   
+});
 
 publishPostButton.addEventListener("click", async () => {
     try {
@@ -144,6 +150,12 @@ publishPostButton.addEventListener("click", async () => {
         const newPost = {
             texto: postTextarea.value,
         };
+
+        const link = imageUrlInput.value.trim();
+
+        if (imageValid(link)) {
+            newPost.img = link;    
+        }
 
         const op = {
             method: "POST",
@@ -160,6 +172,10 @@ publishPostButton.addEventListener("click", async () => {
         }
 
         postTextarea.value = "";
+
+        imageUrlInput.value = "";
+        imageUrlInput.hidden = true;
+        
         await get_posts()
 
     } catch(error) {
