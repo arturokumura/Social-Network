@@ -26,7 +26,7 @@ function decodificarToken() {
 decodificarToken();
 
 function imageValid(link) {
-    return link && link.startsWith("http");
+    return typeof link === "string" && link.startsWith("http");
 }
 
 async function get_user_info(user){
@@ -311,7 +311,7 @@ function alreadyLiked(post) {
     for (let i = 0; i < post.likes.length; i++) {
         const like = post.likes[i];
 
-         if (like.usuario === myId) {    
+         if (Number(like.usuario) === myId) {    
             return true;
         }
     }
@@ -375,7 +375,11 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> 00fa9ddfda5f7be7fdb5bcdb0499987cb019f49c
             if(imageValid(users[post.comentarios[i].usuario-1].img)){
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             }else{
@@ -389,7 +393,7 @@ async function show_posts(posts, users){
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
             
-            if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
+            if(imageValid(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId")))){
                 const commentDeleteButton = document.createElement("span");
                 commentDeleteButton.classList.add("icon");
                 commentDeleteButton.classList.add("icon-bin");
@@ -423,7 +427,8 @@ async function show_posts(posts, users){
                     icon_edit_submit_comment.className = "icon icon-send";
                     submit_edit_comment_button.appendChild(icon_edit_submit_comment);
 
-                    editCommentBox.addEventListener("submit", ()=>{
+                    editCommentBox.addEventListener("submit", (e)=>{
+                        e.preventDefault();
                         edit_comment(post.comentarios[i], editInput, postCommentContent, editCommentBox);
                     })
 
@@ -574,5 +579,8 @@ function eventListeners(commentBox, commentInput, submitButton){
 }
 
 get_posts();
+<<<<<<< HEAD
 get_posts();
 localStorage.removeItem("img");
+=======
+>>>>>>> 00fa9ddfda5f7be7fdb5bcdb0499987cb019f49c
