@@ -900,19 +900,19 @@ main {
 }
 
 /* --- Caixa "O que você está pensando?" --- */
+/* =============== CAIXA DE PUBLICAR =============== */
 #upperPostDiv {
   display: grid;
   grid-template-columns: 48px 1fr;
-  grid-template-rows: auto auto;
   column-gap: 1.1rem;
   row-gap: 0.8rem;
   align-items: start;
 }
 
-/* avatar (iniciais ou foto) */
+/* avatar (foto ou inicial) */
 #picturePic {
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -920,7 +920,7 @@ main {
   background-size: cover;
   background-position: center;
   color: #1d63b8;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -928,14 +928,14 @@ main {
 }
 
 /* campo de texto */
-#upperPostDiv textarea {
+#message {
   grid-column: 2;
   grid-row: 1;
   width: 100%;
   height: 90px;
   padding: 0.75rem 1rem;
   border: 1px solid #d6d1c6;
-  border-radius: 10px;
+  border-radius: 12px;
   font-family: inherit;
   font-size: 0.95rem;
   color: #1f2937;
@@ -943,35 +943,88 @@ main {
   transition: border-color 0.2s;
 }
 
-#upperPostDiv textarea::placeholder {
+#message::placeholder {
   color: #9ca3af;
 }
 
-#upperPostDiv textarea:focus {
+#message:focus {
   outline: none;
   border-color: #1760a8;
 }
 
-/* botão Publicar */
-#upperPostDiv button {
+/* campo do link da imagem (aparece ao clicar no +) */
+#imageUrl {
   grid-column: 2;
   grid-row: 2;
-  justify-self: end;
-  background-color: #1760a8;
-  color: #ffffff;
-  border: none;
-  padding: 0.65rem 1.4rem;
-  border-radius: 8px;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1px solid #d6d1c6;
+  border-radius: 10px;
+  font-family: inherit;
   font-size: 0.9rem;
+  color: #1f2937;
+  transition: border-color 0.2s;
+}
+
+#imageUrl:focus {
+  outline: none;
+  border-color: #1760a8;
+}
+
+#imageUrl[hidden] {
+  display: none;
+}
+
+/* linha dos botões: "+" na esquerda, "Publicar" na direita */
+#postButtons {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* botão + */
+#postButtons #addImageButton {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1760a8;
+  color: #e5f2ff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.7rem;
+  line-height: 1;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-#upperPostDiv button:hover {
+#postButtons #addImageButton:hover {
+  background-color: #154f92;
+}
+
+
+/* botão Publicar */
+#upperPostButton {
+  background-color: #1760a8;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#upperPostButton:hover {
   background-color: #124d87;
 }
 
-#upperPostDiv button:disabled {
+#upperPostButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
