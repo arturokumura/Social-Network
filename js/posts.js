@@ -375,11 +375,6 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> 00fa9ddfda5f7be7fdb5bcdb0499987cb019f49c
             if(imageValid(users[post.comentarios[i].usuario-1].img)){
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             }else{
@@ -579,8 +574,5 @@ function eventListeners(commentBox, commentInput, submitButton){
 }
 
 get_posts();
-<<<<<<< HEAD
 get_posts();
 localStorage.removeItem("img");
-=======
->>>>>>> 00fa9ddfda5f7be7fdb5bcdb0499987cb019f49c
