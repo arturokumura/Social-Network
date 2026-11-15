@@ -1,5 +1,6 @@
 const postsUrl = "https://ifsp.trojahn.uk/redesocial";
 checkToken();
+localStorage.removeItem("img");
 
 //-------HTML/CSS SELECTORS-------
 const userPic = document.querySelector("#usernamePicture");
@@ -16,13 +17,17 @@ const postsDiv = document.querySelector("#postsFetchDiv");
 function decodificarToken() {
     const tokenDados = localStorage.getItem("token").split(".")[1];
     const base64 = tokenDados.replaceAll("-", "+").replaceAll("_", "/");
-    const payload =  JSON.parse(atob(tokenDados));
-    const loggedUserEmail = JSON.parse(atob(tokenDados)).sub;
+    const payload =  JSON.parse(atob(base64));
+
     localStorage.setItem("loggedUserId", payload.data);
     localStorage.setItem("loggedUserEmail", payload.sub);
 }
 
 decodificarToken();
+
+function imageValid(link) {
+    return link && link.startsWith("http");
+}
 
 async function get_user_info(user){
     if(user){
@@ -40,10 +45,10 @@ async function get_user_info(user){
         profileCardEmail.textContent = localStorage.getItem("loggedUserEmail");
     
 
-        if(user.img){
+        if(imageValid(user.img)){
             profileCardPic.style.backgroundImage = `url('${user.img}')`;
         }else{
-            profileCardPic.textContent = user.nome[0].toUpperCase(); //"../images/icone_perfil1.png";
+            profileCardPic.textContent = user.nome[0].toUpperCase(); 
         }
 
         profileInfoDiv.appendChild(profileCardPic);
@@ -73,14 +78,20 @@ async function get_posts(){
             userPic.src = me.img;
             headerUsername.textContent = me.nome;
 
-            if(me.img) {
+            if(imageValid(me.img)) {
                 userPic.textContent = ""; 
     
                 userPic.style.backgroundImage = "url('" + me.img + "')";
                 userPic.style.backgroundSize = "cover";
                 userPic.style.backgroundPosition = "center";
+
+                publishPostPic.style.backgroundImage = "url('" + me.img + "')";
+                publishPostPic.style.backgroundSize = "cover";
+                publishPostPic.style.backgroundPosition = "center";
+
             } else {
                 userPic.textContent = me.nome[0].toUpperCase();
+                publishPostPic.textContent = me.nome[0].toUpperCase();
             }   
         }
 
@@ -117,6 +128,47 @@ async function get_users(){
     }
 }
 
+//Publish post
+const publishPostButton = document.querySelector("#upperPostButton");
+const publishPostPic = document.querySelector("#picturePic");
+const postTextarea = document.querySelector("#message");
+
+publishPostButton.addEventListener("click", async () => {
+    try {
+        const token = localStorage.getItem("token");
+        
+        if(postTextarea.value.trim() === "") {
+            alert("Digite uma mensagem válida!");
+            return;
+        }
+        const newPost = {
+            texto: postTextarea.value,
+        };
+
+        const op = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token},
+            body: JSON.stringify(newPost),
+        };
+
+        publishPostButton.textContent = "Publicando...";
+
+        const response = await fetch(postsUrl + "/posts/", op);
+    
+        if(!response.ok) {
+            throw new Error("Erro ao publicar!" + response.status); 
+        }
+
+        postTextarea.value = "";
+        await get_posts()
+
+    } catch(error) {
+        console.log(error.message);
+    } finally {
+        publishPostButton.textContent = "Publicar";
+    }
+})
+
 async function like(idPost){
 
     if (!checkToken()) return false; 
@@ -144,11 +196,9 @@ async function like(idPost){
     }
 }
 
-//Both function have to make an API fetch in POST method(i think lol)
-
 async function comment(post, commentText){
     const commentUser = {
-        id: localStorage.getItem("loggedUserID"),
+        id: localStorage.getItem("loggedUserId"),
         texto: commentText
     }
     const op = {
@@ -255,6 +305,20 @@ postDiv.appendChild(postHeader);
 postDiv.appendChild(postContent);
 postDiv.appendChild(postComment);
 
+function alreadyLiked(post) {
+    const myId = Number(localStorage.getItem("loggedUserId"));
+
+    for (let i = 0; i < post.likes.length; i++) {
+        const like = post.likes[i];
+
+         if (like.usuario === myId) {    
+            return true;
+        }
+    }
+
+    return false;
+}
+
 async function show_posts(posts, users){
     if(!posts){return};
 
@@ -294,7 +358,7 @@ async function show_posts(posts, users){
         
         const user = users[post.usuario-1];
         
-        if(user.img){
+        if(imageValid(user.img)){
             postUsernameIcon.src = user.img;
         }else{
             postUsernameIcon.src = `../images/icone_perfil1.png`;
@@ -303,7 +367,7 @@ async function show_posts(posts, users){
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
-        if (post.img) postImage.src = post.img;
+        if (imageValid(post.img)) postImage.src = post.img;
 
         for(let i=0; i<post.comentarios.length; i++){
             const postComment = document.createElement("div");
@@ -311,8 +375,14 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
+<<<<<<< Updated upstream
             
             if(users[post.comentarios[i].usuario-1].img){
+=======
+            const commentDeleteButton = document.createElement("span");
+
+            if(imageValid(users[post.comentarios[i].usuario-1].img)){
+>>>>>>> Stashed changes
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             }else{
                 postCommentUserIcon.src = `../images/icone_perfil1.png`;
@@ -407,18 +477,26 @@ async function show_posts(posts, users){
 
         const likeIcon = likeBtn.querySelector('.icon');
         const likeCount = likeBtn.querySelector('.count');
+<<<<<<< Updated upstream
+=======
+
+        if (alreadyLiked(post)) {
+            likeIcon.className = "icon icon-heart-filled";
+        }
+>>>>>>> Stashed changes
         
         likeBtn.addEventListener('click', async () => {
-            if(likeIcon.classList.contains("icon-heart-filled")) {
-                likeIcon.className ="icon icon-heart";
+            const liked = likeIcon.classList.contains("icon-heart-filled");
+
+            const ok = await like(post.id);
+            if(!ok) return;
+
+            if(liked) {
+                likeIcon.className = "icon icon-heart";
                 likeCount.textContent = Number(likeCount.textContent) - 1;
             } else {
-                const ok = await like(post.id);
-                console.log("deuCerto:", ok);  
-                if(ok) {
-                    likeIcon.className = "icon icon-heart-filled";
-                    likeCount.textContent = Number(likeCount.textContent) + 1;
-                }
+                likeIcon.className = "icon icon-heart-filled";
+                likeCount.textContent = Number(likeCount.textContent) + 1;
             }
         });
 
@@ -468,6 +546,7 @@ function createActionButton(iconClass, count){
     return input;
 }
 
+<<<<<<< Updated upstream
 function eventListeners(commentBox, commentInput, submitButton){
     commentBox.addEventListener("submit", (e)=> {
             e.preventDefault();
@@ -505,3 +584,7 @@ function eventListeners(commentBox, commentInput, submitButton){
 }
 
 get_posts();
+=======
+get_posts();
+localStorage.removeItem("img");
+>>>>>>> Stashed changes
