@@ -681,3 +681,41 @@ main {
     width: 72px;
   }
 }
+
+#profileInfoDiv {
+  background-color: #ffffff;
+  border: 1px solid #e5e1d8;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.profile-card-pic {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background-color: #e3eefb;
+  background-size: cover;
+  background-position: center;
+  color: #1d63b8;
+  font-size: 2.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.profile-card-email {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  word-break: break-all;
+}
