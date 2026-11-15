@@ -26,7 +26,7 @@ function decodificarToken() {
 decodificarToken();
 
 function imageValid(link) {
-    return link && link.startsWith("http");
+    return typeof link === "string" && link.startsWith("http");
 }
 
 async function get_user_info(user){
@@ -311,7 +311,7 @@ function alreadyLiked(post) {
     for (let i = 0; i < post.likes.length; i++) {
         const like = post.likes[i];
 
-         if (like.usuario === myId) {    
+         if (Number(like.usuario) === myId) {    
             return true;
         }
     }
@@ -375,14 +375,8 @@ async function show_posts(posts, users){
             const postCommentContent = document.createElement("div");
             const postCommentUsername = document.createElement("h4");
             const postCommentText = document.createElement("p");
-<<<<<<< Updated upstream
             
-            if(users[post.comentarios[i].usuario-1].img){
-=======
-            const commentDeleteButton = document.createElement("span");
-
             if(imageValid(users[post.comentarios[i].usuario-1].img)){
->>>>>>> Stashed changes
                 postCommentUserIcon.src = users[post.comentarios[i].usuario-1].img;
             }else{
                 postCommentUserIcon.src = `../images/icone_perfil1.png`;
@@ -395,7 +389,7 @@ async function show_posts(posts, users){
             postCommentContent.appendChild(postCommentUsername);
             postCommentContent.appendChild(postCommentText);
             
-            if(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId"))){
+            if(imageValid(users[post.comentarios[i].usuario-1].id == Number(localStorage.getItem("loggedUserId")))){
                 const commentDeleteButton = document.createElement("span");
                 commentDeleteButton.classList.add("icon");
                 commentDeleteButton.classList.add("icon-bin");
@@ -429,7 +423,8 @@ async function show_posts(posts, users){
                     icon_edit_submit_comment.className = "icon icon-send";
                     submit_edit_comment_button.appendChild(icon_edit_submit_comment);
 
-                    editCommentBox.addEventListener("submit", ()=>{
+                    editCommentBox.addEventListener("submit", (e)=>{
+                        e.preventDefault();
                         edit_comment(post.comentarios[i], editInput, postCommentContent, editCommentBox);
                     })
 
@@ -477,13 +472,10 @@ async function show_posts(posts, users){
 
         const likeIcon = likeBtn.querySelector('.icon');
         const likeCount = likeBtn.querySelector('.count');
-<<<<<<< Updated upstream
-=======
 
         if (alreadyLiked(post)) {
             likeIcon.className = "icon icon-heart-filled";
         }
->>>>>>> Stashed changes
         
         likeBtn.addEventListener('click', async () => {
             const liked = likeIcon.classList.contains("icon-heart-filled");
@@ -546,7 +538,6 @@ function createActionButton(iconClass, count){
     return input;
 }
 
-<<<<<<< Updated upstream
 function eventListeners(commentBox, commentInput, submitButton){
     commentBox.addEventListener("submit", (e)=> {
             e.preventDefault();
@@ -584,7 +575,3 @@ function eventListeners(commentBox, commentInput, submitButton){
 }
 
 get_posts();
-=======
-get_posts();
-localStorage.removeItem("img");
->>>>>>> Stashed changes
