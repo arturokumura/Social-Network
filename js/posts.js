@@ -26,22 +26,29 @@ decodificarToken();
 
 async function get_user_info(user){
     if(user){
+        profileInfoDiv.replaceChildren(); 
+
+        const profileCardPic = document.createElement("span");
+        profileCardPic.className = "profile-card-pic";
+
         const profileCardName = document.createElement("p");
+        profileCardName.className = "profile-card-name";
         profileCardName.textContent = user.nome;
 
         const profileCardEmail = document.createElement("p");
+        profileCardEmail.className = "profile-card-email";
         profileCardEmail.textContent = localStorage.getItem("loggedUserEmail");
+    
 
-        const profileCardPic = document.createElement("img");
         if(user.img){
-            profileCardPic.src = user.img;
+            profileCardPic.style.backgroundImage = `url('${user.img}')`;
         }else{
-            profileCardPic.src = "../images/icone_perfil1.png";
+            profileCardPic.textContent = user.nome[0].toUpperCase(); //"../images/icone_perfil1.png";
         }
 
+        profileInfoDiv.appendChild(profileCardPic);
         profileInfoDiv.appendChild(profileCardName);
         profileInfoDiv.appendChild(profileCardEmail);
-        profileInfoDiv.appendChild(profileCardPic);
     }
 }
 
