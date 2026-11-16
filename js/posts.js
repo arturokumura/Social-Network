@@ -500,6 +500,7 @@ async function show_posts(posts, users){
                 saveEditButton.classList.add('icon-save');
 
                 let cancelEditButton = document.createElement("button");
+                cancelEditButton.type = "button";
                 cancelEditButton.classList.add('icon');
                 cancelEditButton.classList.add('icon-cancel');
 
@@ -528,8 +529,8 @@ async function show_posts(posts, users){
                 cancelEditButton.addEventListener("click", (e)=>{
                     e.preventDefault();
                     postContent.removeChild(editPostBox);
+                    postContent.appendChild(editPostButton);
                     postContent.appendChild(postText);
-                    return;
                 })
                 
                 editPostBox.appendChild(saveEditButton);
@@ -602,6 +603,11 @@ async function show_posts(posts, users){
 
                     let comment = postCommentText.textContent;
 
+                    let cancelEditButton = document.createElement("button");
+                    cancelEditButton.type = "button";
+                    cancelEditButton.classList.add('icon');
+                    cancelEditButton.classList.add('icon-cancel');
+                
                     if(postCommentText){
                         postCommentContent.removeChild(postCommentText);
                     }
@@ -623,7 +629,15 @@ async function show_posts(posts, users){
                     })
 
                     eventListeners(editCommentBox, editInput, submit_edit_comment_button);
+                    
+                    cancelEditButton.addEventListener("click", (e)=>{
+                        e.preventDefault();
+                        postCommentContent.removeChild(editCommentBox);
+                        postCommentContent.appendChild(postCommentText);
+                    })
 
+                    
+                    editCommentBox.appendChild(cancelEditButton);
                     editCommentBox.appendChild(editInput);
                     editCommentBox.appendChild(submit_edit_comment_button);
                     editInput.focus();

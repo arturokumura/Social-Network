@@ -823,6 +823,97 @@ main {
   }
 }
 
+/* texto do post (ou o formulário de edição) sempre acima da imagem */
+#postsFetchDiv > div > div:nth-child(2) p:first-of-type,
+#postsFetchDiv > div > div:nth-child(2) > form {
+  order: -1;
+}
+
+/* --- Botão de cancelar edição (X) --- */
+.icon-cancel {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.icon-cancel:hover {
+  color: #1f2937;
+}
+
+.icon-cancel:active {
+  transform: scale(0.93);
+}
+
+.icon-cancel:focus-visible {
+  outline: 2px solid #1760a8;
+  outline-offset: 2px;
+}
+
+.icon-cancel::before {
+  content: "";
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+}
+
+/* no formulário do POST: botão redondo branco ao lado do salvar */
+#postsFetchDiv > div > div:nth-child(2) > form .icon-cancel {
+  order: 2;
+  margin-left: auto; /* empurra o par (cancelar + salvar) para a direita */
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border: 1px solid #d6d1c6;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form .icon-cancel::before {
+  width: 18px;
+  height: 18px;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form .icon-cancel:hover {
+  background-color: #f4f1ea;
+}
+
+#postsFetchDiv > div > div:nth-child(2) > form .icon-save {
+  order: 3;       /* salvar fica depois do cancelar */
+  margin-left: 0;
+}
+
+/* no formulário do COMENTÁRIO: botão discreto entre o campo e o de enviar */
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .icon-cancel {
+  order: 1;
+  width: 32px;
+  height: 32px;
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .icon-cancel::before {
+  width: 15px;
+  height: 15px;
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .icon-cancel:hover {
+  background-color: rgba(31, 41, 55, 0.08);
+}
+
+#postsFetchDiv > div > div:nth-child(n+3) > div > form .submit-edit_comment-button {
+  order: 2;
+}
+
 /* telas largas: três colunas, feed centralizado e card no espaço da esquerda */
 @media (min-width: 1440px) {
   body {
