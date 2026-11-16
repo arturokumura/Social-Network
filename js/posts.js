@@ -496,6 +496,7 @@ async function show_posts(posts, users){
                 e.preventDefault();
 
                 let saveEditButton = document.createElement("button");
+                saveEditButton.type = "submit";
                 saveEditButton.classList.add('icon');
                 saveEditButton.classList.add('icon-save');
 
