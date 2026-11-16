@@ -585,8 +585,8 @@ main {
 }
 
 /* --- Botão de excluir comentário (lixeira) --- */
-#postsFetchDiv .icon-bin {
-  /* posição: sobre o balão, à direita, no meio da altura */
+/* só o filho direto do balão do comentário; não afeta o botão de excluir do post */
+#postsFetchDiv > div > div:nth-child(n+3) > div > .icon-bin {
   grid-column: 2;
   grid-row: 1 / span 2;
   justify-self: end;
@@ -597,22 +597,28 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   width: 30px;
   height: 30px;
   padding: 0;
   background: none;
   border: none;
   border-radius: 50%;
-  color: #9ca3af;
+  color: #8b929e;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s, transform 0.1s;
+
+  /* cancela a máscara da regra global .icon-bin (feita para o ícone do botão do post) */
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
-/* o desenho da lixeira (recorte em formato de SVG) */
-#postsFetchDiv .icon-bin::before {
+#postsFetchDiv > div > div:nth-child(n+3) > div > .icon-bin::before {
   content: "";
-  width: 16px;
-  height: 16px;
+  display: block;
+  flex: none;
+  width: 18px;
+  height: 18px;
   background-color: currentColor;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -620,20 +626,20 @@ main {
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
 }
 
-#postsFetchDiv .icon-bin:hover {
+#postsFetchDiv > div > div:nth-child(n+3) > div > .icon-bin:hover {
   color: #d64545;
   background-color: #fbeded;
 }
 
-#postsFetchDiv .icon-bin:active {
+#postsFetchDiv > div > div:nth-child(n+3) > div > .icon-bin:active {
   transform: scale(0.92);
 }
 
-#postsFetchDiv .icon-bin:focus-visible {
+#postsFetchDiv > div > div:nth-child(n+3) > div > .icon-bin:focus-visible {
   outline: 2px solid #1760a8;
   outline-offset: 2px;
 }
