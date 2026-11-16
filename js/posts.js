@@ -498,20 +498,24 @@ async function show_posts(posts, users){
                 let saveEditButton = document.createElement("button");
                 saveEditButton.classList.add('icon');
                 saveEditButton.classList.add('icon-save');
-                
-                postContent.removeChild(editPostButton);
+
+                let cancelEditButton = document.createElement("button");
+                cancelEditButton.classList.add('icon');
+                cancelEditButton.classList.add('icon-cancel');
+
+                let editPostInput = document.createElement("input");
+                editPostInput.classList.add("edit-post-input");
 
                 let editPostBox = document.createElement("form");
-                let editPostInput = document.createElement("input");
+                
                 let editPostImageInput = document.createElement("input");
-
-                editPostInput.classList.add("edit-post-input");
                 editPostImageInput.classList.add("edit-post-input");
                 editPostImageInput.placeholder = "Digite o link da imagem aqui";
-
+                
                 if(post.img){editPostImageInput.value = post.img;}else{editPostImageInput.value = null}
                 editPostInput.value = post.texto;
-
+                
+                postContent.removeChild(editPostButton);
                 postContent.removeChild(postText);
 
                 editPostBox.addEventListener("submit", (e)=>{
@@ -521,7 +525,15 @@ async function show_posts(posts, users){
 
                 eventListeners(editPostBox, editPostInput, saveEditButton);
                 
+                cancelEditButton.addEventListener("click", (e)=>{
+                    e.preventDefault();
+                    postContent.removeChild(editPostBox);
+                    postContent.appendChild(postText);
+                    return;
+                })
+                
                 editPostBox.appendChild(saveEditButton);
+                editPostBox.appendChild(cancelEditButton);
                 editPostBox.appendChild(editPostInput);
                 editPostBox.appendChild(editPostImageInput);
                 postContent.appendChild(editPostBox);
