@@ -81,29 +81,27 @@ header img {
   --header-height: 80px; /* mesma altura do header */
 }
 
+/* =========================================================
+   CARD DE PERFIL (lateral esquerda, fixo na rolagem)
+   ========================================================= */
 #profileInfo {
   grid-area: profile;
   align-self: start;
   position: sticky;
   top: 0;
-  padding: 2rem 0 0; /* só o espaço de cima; a largura é do card */
+  padding: 2rem 0 0;
 }
 
 #profileInfoDiv {
-  /* 80% da largura do espaço lateral, centralizado (10% de cada lado) */
-  width: 80%;
-  margin: 0 auto;
-
-  /* 60% da altura disponível (tela menos o cabeçalho) */
-  height: calc((100vh - var(--header-height)) * 0.6);
-  min-height: 320px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem 1.5rem;
+  width: 80%;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 1.25rem;
+  max-height: calc(100vh - 3rem); /* em telas baixas, rola dentro do card */
+  overflow-y: auto;
   background-color: #ffffff;
   border: 1px solid #e5e1d8;
   border-radius: 16px;
@@ -116,31 +114,129 @@ header img {
   display: none;
 }
 
-#profileInfoDiv img {
-  order: -1; /* foto no topo */
+/* --- Foto, nome e e-mail --- */
+.profile-card-pic {
   flex-shrink: 0;
-  width: clamp(96px, 50%, 180px); /* cresce com o card, até 180px */
-  aspect-ratio: 1 / 1;
-  height: auto;
-  margin-bottom: 0.75rem;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 1rem;
   border-radius: 50%;
-  object-fit: cover;
   background-color: #e3eefb;
+  background-size: cover;
+  background-position: center;
+  color: #1d63b8;
+  font-size: 2.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* nome */
-#profileInfoDiv p:first-of-type {
-  font-size: 1.4rem;
+.profile-card-name {
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1f2937;
 }
 
-/* e-mail */
-#profileInfoDiv p:last-of-type {
+.profile-card-email {
+  margin-top: 0.2rem;
   max-width: 100%;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: #6b7280;
   overflow-wrap: anywhere;
+}
+
+/* --- Estatísticas: publicações | curtidas --- */
+#profileInfoDiv > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-self: stretch;
+  margin: 1.1rem 0 0.9rem;
+  padding: 1rem 0;
+  border-top: 1px solid #ece8df;
+  border-bottom: 1px solid #ece8df;
+}
+
+#profileInfoDiv > div > div {
+  padding: 0 0.5rem;
+}
+
+/* traço entre as duas estatísticas */
+#profileInfoDiv > div > div + div {
+  border-left: 1px solid #ece8df;
+}
+
+/* número */
+#profileInfoDiv > div > div > p:first-child {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1f2937;
+}
+
+/* legenda */
+#profileInfoDiv > div > div > p:last-child {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* --- Botões de navegação --- */
+.profile-actions-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  align-self: stretch;
+  padding: 0.7rem 0.9rem;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  color: #374151;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.profile-actions-button + .profile-actions-button {
+  margin-top: 0.25rem;
+}
+
+.profile-actions-button:hover {
+  background-color: #caddfb89;
+  color: #104171;
+}
+
+/* botão da seção atual (azul claro) */
+.profile-actions-button.active,
+.profile-actions-button[aria-current="page"] {
+  background-color: #f4f6f8;
+  color: #1760a8;
+  font-weight: 500;
+}
+
+.profile-actions-button:focus-visible {
+  outline: 2px solid #1760a8;
+  outline-offset: 2px;
+}
+
+.profile-actions-button .icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* ícone da casa (os de coração e balão já existem: .icon-heart e .icon-comment) */
+.icon-house {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
 }
 
 main {

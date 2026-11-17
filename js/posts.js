@@ -43,7 +43,70 @@ async function get_user_info(user){
         const profileCardEmail = document.createElement("p");
         profileCardEmail.className = "profile-card-email";
         profileCardEmail.textContent = localStorage.getItem("loggedUserEmail");
+
+        let userPostsCounter = Number(localStorage.getItem("userPostsCount"));
+        let userLikesCounter = Number(localStorage.getItem("userPostsLikesCount"));
     
+        let profileStatsDiv = document.createElement("div");
+        let postsCounter = document.createElement("div");
+        let likesCounter = document.createElement("div");
+
+        let postCounterStat = document.createElement("p");
+        postCounterStat.textContent = userPostsCounter;
+        let likeCounterStat = document.createElement("p");
+        likeCounterStat.textContent = userLikesCounter;
+        
+        postCounterStat.classList.add("post-stats-number");
+        likeCounterStat.classList.add("post-stats-number");
+        
+        let postCounterSubtitle = document.createElement("p");
+        if(userPostsCounter == 1){postCounterSubtitle.textContent = "Publicação";}else{postCounterSubtitle.textContent = "Publicações";}
+        let likeCounterSubtitle = document.createElement("p");
+        if(userLikesCounter == 1){likeCounterSubtitle.textContent = "Curtida";}else{likeCounterSubtitle.textContent = "Curtidas";}
+
+        postCounterSubtitle.classList.add("post-stats-subtitle");
+        likeCounterSubtitle.classList.add("post-stats-subtitle");
+
+        postsCounter.appendChild(postCounterStat);
+        postsCounter.appendChild(postCounterSubtitle);
+
+        likesCounter.appendChild(likeCounterStat);
+        likesCounter.appendChild(likeCounterSubtitle);
+
+        profileStatsDiv.appendChild(postsCounter);
+        profileStatsDiv.appendChild(likesCounter);
+
+
+        let startButton = document.createElement("button");
+        startButton.classList.add("profile-actions-button");
+        let homeIcon = document.createElement("span");
+        let startText = document.createElement("span");
+        startText.textContent = "Início";
+        homeIcon.classList.add("icon");
+        homeIcon.classList.add("icon-house");
+        startButton.appendChild(homeIcon);
+        startButton.appendChild(startText);
+
+        let showLikesButton = document.createElement("button");
+        showLikesButton.classList.add("profile-actions-button");
+        let likeIcon = document.createElement("span");
+        let likeText = document.createElement("span");
+        likeText.textContent = "Curtidas";
+        likeIcon.classList.add("icon");
+        likeIcon.classList.add("icon-heart");
+        showLikesButton.appendChild(likeIcon);
+        showLikesButton.appendChild(likeText);
+
+        let showUserCommentsButton = document.createElement("button");
+        showUserCommentsButton.classList.add("profile-actions-button");
+        let commentIcon = document.createElement("span");
+        let commentText = document.createElement("span");
+        commentText.textContent = "Comentários";
+        commentIcon.classList.add("icon");
+        commentIcon.classList.add("icon-comment");
+        showUserCommentsButton.appendChild(commentIcon);
+        showUserCommentsButton.appendChild(commentText);
+
 
         if(imageValid(user.img)){
             profileCardPic.style.backgroundImage = `url('${user.img}')`;
@@ -54,6 +117,10 @@ async function get_user_info(user){
         profileInfoDiv.appendChild(profileCardPic);
         profileInfoDiv.appendChild(profileCardName);
         profileInfoDiv.appendChild(profileCardEmail);
+        profileInfoDiv.appendChild(profileStatsDiv);
+        profileInfoDiv.appendChild(startButton);
+        profileInfoDiv.appendChild(showLikesButton);
+        profileInfoDiv.appendChild(showUserCommentsButton);
     }
 }
 
@@ -443,6 +510,8 @@ async function show_posts(posts, users){
 
     postsDiv.replaceChildren();
     
+    let userPostsCount = 0;
+    let userPostsLikesCount = 0;
 
     for(let post of posts){
         //-------CREATING HTML ELEMENTS FOR EACH POST-------
@@ -486,6 +555,9 @@ async function show_posts(posts, users){
         postText.textContent = post.texto;
         
         if(post.usuario == Number(localStorage.getItem("loggedUserId"))){
+
+            userPostsCount += 1;
+            userPostsLikesCount += post.likes.length;
             
             //Edit post
             let editPostButton = document.createElement("button");
@@ -727,6 +799,9 @@ async function show_posts(posts, users){
 
         postsDiv.appendChild(postDiv);
     }
+
+    localStorage.setItem("userPostsCount", userPostsCount);
+    localStorage.setItem("userPostsLikesCount", userPostsLikesCount);
 }
 
 function createActionButton(iconClass, count){
