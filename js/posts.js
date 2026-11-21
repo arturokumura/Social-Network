@@ -25,7 +25,7 @@ function decodificarToken() {
 
 decodificarToken();
 
-function imageValid(link) {
+export function imageValid(link) {
     return typeof link === "string" && link.startsWith("http");
 }
 
