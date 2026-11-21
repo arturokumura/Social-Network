@@ -241,7 +241,6 @@ async function showPeopleCard() {
                 userPic.style.backgroundPosition = "center";
             } else {
                 userPic.textContent = user.nome[0].toUpperCase();
-                //publishPostPic.textContent = user.nome[0].toUpperCase();
             }
 
             row.append(userPic, userName);
@@ -253,5 +252,128 @@ async function showPeopleCard() {
     siteDataDiv.appendChild(peopleCardDiv);
     lucide.createIcons();
 }
+
+//Recent activity card
+async function showRecentActivity() {
+    const recentActDiv = document.querySelector("#recentActivitiesDiv");
+
+    const icon = document.createElement("i");
+    icon.setAttribute("data-lucide", "message-circle");
+
+    const recentActTitle = document.createElement("h3");
+    recentActTitle.classList = "recentActTitle";
+    recentActTitle.textContent = "Atividade recente";
+
+    const recentActHeader = document.createElement("div");
+    recentActHeader.classList.add("mostLikedHeader");
+
+    recentActHeader.append(icon, recentActTitle);
+    recentActDiv.appendChild(recentActHeader);
+
+    const recentActList = document.createElement("ol");
+    recentActList.classList.add("recentActList");
+
+    recentActDiv.appendChild(recentActList);
+
+    try {
+        const responsePosts = await fetch(urlBase + "posts/");
+
+        if (!responsePosts.ok) {
+            throw new Error("Erro ao buscar posts");
+        }
+
+        const posts = await responsePosts.json();
+
+        const responseUsers = await fetch(urlBase + "usuarios/");
+
+        if (!responseUsers.ok) {
+            throw new Error("Erro ao buscar usuários");
+        }
+
+        const users = await responseUsers.json();
+
+        const myPosts = posts.filter(post => post.usuario == loggedUserId);
+
+        const recentComments = [];
+
+        for (const post of myPosts) {
+            if (post.comentarios && post.comentarios.length > 0) {
+                for (const comment of post.comentarios) {
+                    recentComments.push({
+                        comment: comment,
+                        post: post
+                    });
+                }
+            }
+        }
+
+        if (recentComments.length === 0) {
+            const emptyIcon = document.createElement("i");
+            emptyIcon.setAttribute("data-lucide", "message-circle");
+
+            const emptyTitle = document.createElement("h4");
+            emptyTitle.textContent = "Nenhuma atividade ainda";
+
+            const emptySub = document.createElement("p");
+            emptySub.textContent = "Os comentários nas suas publicações aparecerão aqui.";
+
+            emptyIcon.classList.add("emptyIcon");
+            emptyTitle.classList.add("emptyTitle");
+            emptySub.classList.add("emptySub");
+
+            recentActDiv.append(emptyIcon, emptyTitle, emptySub);
+
+            lucide.createIcons();
+            return;
+        }
+
+        //show most recent comments
+        recentComments.reverse();
+
+        const limitedComments = recentComments.slice(0, 3);
+
+        for (const item of limitedComments) {
+            const comment = item.comment;
+
+            const row = document.createElement("li");
+            row.classList.add("recentActItem");
+
+            //user that comments
+            const commentUserId = comment.usuario;
+            const commentUser = users.find(user => user.id == commentUserId);
+
+            const userName = document.createElement("strong");
+            
+            if (commentUser) {
+                userName.textContent = commentUser.nome;
+            } else {
+                userName.textContent = "Usuário";
+            }
+
+            const description = document.createElement("p");
+            description.append(userName, " comentou na sua publicação");
+
+            const commentText = document.createElement("span");
+            commentText.classList.add("recentActComment");
+            commentText.textContent = comment.texto;
+
+            row.append(description, commentText);
+            recentActList.appendChild(row);
+        }
+
+    } catch (error) {
+        console.log("Erro na atividade recente:", error);
+
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent = "Não foi possível carregar as atividades.";
+
+        recentActDiv.appendChild(errorMessage);
+    }
+
+    lucide.createIcons();
+}
+
+showRecentActivity();
 listRandomPeople();
 showPeopleCard();
+
