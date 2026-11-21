@@ -162,4 +162,96 @@ async function getData(idUser, idPost, likesCount, users) {
 
 showMostLikedPosts();
 
+//people card
+async function listRandomPeople() {
+    const response = await fetch(urlBase + "usuarios/");
+
+    if(!response.ok) {
+        throw new Error("Erro na requisição de usuários");
+    }
+
+    const users = await response.json();
+    const randomPeopleList = await users
+        .slice()
+        .sort(() => Math.random() - 0.5)
+        .slice(0,3)
+    
+    return randomPeopleList;
+}
+
+async function showPeopleCard() {
+    const peopleCardDiv = document.createElement("usersDiv");
+    peopleCardDiv.className = "peopleCard";
+
+    const iconPeople = document.createElement("i");
+    iconPeople.setAttribute("data-lucide", "flame");
+
+    const peopleTitle = document.createElement("h3");
+    peopleTitle.classList = "peopleTitle";
+    peopleTitle.textContent = "Pessoas";
+
+    const peopleList = document.createElement("ol");
+    peopleList.classList = "peopleList";
+
+    const peopleHeader = document.createElement("div");
+    peopleHeader.classList.add("peopledHeader");
+
+    peopleHeader.append(iconPeople, peopleTitle);
+
+    peopleCardDiv.appendChild(peopleHeader);
+    peopleCardDiv.appendChild(peopleList);
+
+    const usersList = await listRandomPeople();
+
+    if(usersList.length == 0) {
+        const iconEmptyPeople = document.createElement("i");
+        iconEmptyPeople.setAttribute("data-lucide", "user-round-x");
+        iconEmptyPeople.classList.add("emptyIconPeople");
+
+        const emptyMessagePeople = document.createElement("h4");
+        emptyMessagePeople.textContent = "Nenhuma pessoa por aqui ainda";
+        emptyMessagePeople.classList.add("emptyTitle");
+
+        const emptyMessageSubPeople = document.createElement("p");
+        emptyMessageSubPeople.textContent = "Quando novos usuários entrarem, eles aparecerão aqui";
+        emptyMessageSubPeople.classList.add("emptySubPeople");
+
+        peopleCardDiv.appendChild(iconEmptyPeople);
+        peopleCardDiv.appendChild(emptyMessagePeople);
+        peopleCardDiv.appendChild(emptyMessageSubPeople);
+
+        lucide.createIcons();
+
+    } else {
+        const list = await listRandomPeople();
+        for(const user of list) {
+            const row = document.createElement("li");
+            row.classList.add("peopleItem");
+
+            const userName = document.createElement("span");
+            userName.classList.add("userNamePeopleCard");
+            userName.textContent = user.nome;
+
+            const userPic = document.createElement("span");
+            userPic.classList.add("userPicPeopleCard");
+
+            if(imageValid(user.img)) {
+                userPic.style.backgroundImage = "url('" + user.img + "')";
+                userPic.style.backgroundSize = "cover";
+                userPic.style.backgroundPosition = "center";
+            } else {
+                userPic.textContent = user.nome[0].toUpperCase();
+                //publishPostPic.textContent = user.nome[0].toUpperCase();
+            }
+
+            row.append(userPic, userName);
+
+            peopleCardDiv.appendChild(row);
+        }
+    }
+
+    siteDataDiv.appendChild(peopleCardDiv);
+    lucide.createIcons();
+}
 listRandomPeople();
+showPeopleCard();
