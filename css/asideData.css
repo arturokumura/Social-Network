@@ -1,0 +1,466 @@
+/* =========================================================
+   COLUNA DA DIREITA (#siteData)
+   Cartões: Posts em destaque (#mostLikedDiv) e Pessoas
+   ========================================================= */
+
+#siteData {
+  grid-area: right;           /* só tem efeito se o body usar grid-template-areas com "right" */
+  align-self: start;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem 2rem 0;
+}
+
+/* Evita que contêineres vazios do HTML reservem células na grade responsiva. */
+#siteData > div:empty {
+  display: none;
+}
+
+/* Cartões de destaque e pessoas. O JS cria o cartão de pessoas como <usersDiv>. */
+#mostLikedDiv,
+#siteData > .peopleCard {
+  background: #ffffff;
+  border: 1px solid #e5e1d8;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ---------- CABEÇALHO DOS CARTÕES ---------- */
+.mostLikedHeader,
+.peopledHeader,      /* nome com erro de digitação, como está no JS */
+.peopleHeader {      /* nome correto, caso você corrija no JS */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.mostLikedHeader svg,
+.peopledHeader svg,
+.peopleHeader svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: #1760a8;
+}
+
+.mostLikedTitle,
+.peopleTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+
+/* ---------- LISTAS ---------- */
+.mostLikedList,
+.peopleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: rank;
+}
+
+/* lista vazia não ocupa espaço */
+.mostLikedList:empty,
+.peopleList:empty {
+  display: none;
+}
+
+
+/* ---------- POSTS EM DESTAQUE ---------- */
+.mostLikedItem {
+  counter-increment: rank;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "rank user likes"
+    "rank msg  likes";
+  column-gap: 0.6rem;
+  row-gap: 0.1rem;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-top: 1px solid #ece8df;
+}
+
+/* número 1, 2, 3 criado só com CSS */
+.mostLikedItem::before {
+  content: counter(rank);
+  grid-area: rank;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1760a8;
+}
+
+.mostLikedUser {
+  grid-area: user;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mostLikedMessage {
+  grid-area: msg;
+  font-size: 0.8rem;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;      /* mensagem longa vira "texto..." */
+}
+
+.mostLikedLikes {
+  grid-area: likes;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* coração vermelho antes do número (o JS só escreve o número) */
+.mostLikedLikes::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e0245e' stroke='%23e0245e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+
+/* ---------- PESSOAS ---------- */
+.peopleItem {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-top: 1px solid #ece8df;
+}
+
+.userPicPeopleCard {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #e3eefb;
+  color: #1760a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.userNamePeopleCard {
+  min-width: 0;
+  font-size: 0.9rem;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ---------- ESTADOS VAZIOS ---------- */
+.emptyIcon,
+.emptyIconPeople {
+  display: block;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  box-sizing: border-box;
+  margin: 0.9rem auto 0.7rem;
+  border-radius: 50%;
+  background: #e3eefb;
+  color: #1760a8;
+}
+
+.emptyTitle {
+  margin: 0 0 0.25rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.emptySub,
+.emptySubPeople {
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   CARTÃO "ATIVIDADE RECENTE"
+   Cole no final do asideData.css
+   ========================================================= */
+
+.activityHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.activityHeader svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: #1760a8;
+}
+
+.activityTitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.activityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activityList:empty {
+  display: none;
+}
+
+.activityItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid #ece8df;
+}
+
+.activityUser {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: #1f2937;
+}
+
+.activityUser b {
+  font-weight: 600;
+}
+
+.activityText {
+  font-size: 0.8rem;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;      /* comentário longo vira "texto..." */
+}
+
+/* =========================================================
+   LAYOUT RESPONSIVO DA PÁGINA
+   ========================================================= */
+body {
+  display: grid;
+  width: 100%;
+  grid-template-columns:
+    minmax(1rem, 1fr)
+    minmax(320px, 340px)
+    minmax(0, 870px)
+    minmax(320px, 340px)
+    minmax(1rem, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "header header header header header"
+    ".      aside  main   right  .";
+  column-gap: clamp(1rem, 1.5vw, 1.75rem);
+  align-items: start;
+}
+
+header {
+  grid-area: header;
+}
+
+#profileInfo {
+  grid-area: aside;
+  display: block;
+  min-width: 0;
+  padding: 2rem 0 0;
+}
+
+#profileInfoDiv {
+  width: 100%;
+  max-width: none;
+  padding: 1.75rem 1.5rem;
+}
+
+.profile-card-pic {
+  width: 96px;
+  height: 96px;
+  font-size: 2.2rem;
+}
+
+.profile-actions-button {
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+main {
+  grid-area: main;
+  min-width: 0;
+  width: 100%;
+  max-width: 820px;
+  justify-self: center;
+}
+
+@media (max-width: 1150px) {
+  body {
+    grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+    grid-template-areas:
+      "header header"
+      "aside  main"
+      "right  right";
+    padding: 0 1rem;
+  }
+
+  header {
+    margin: 0 -1rem;
+  }
+
+  #siteData {
+    display: grid;
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 0 1.5rem;
+  }
+
+  #profileInfo {
+    padding: 1.5rem 0 0;
+  }
+}
+
+/* Em tablets, mantém as laterais entre o perfil e o feed. */
+@media (min-width: 960px) and (max-width: 1150px) {
+  body {
+    grid-template-columns: minmax(190px, 220px) minmax(230px, 260px) minmax(0, 1fr);
+    grid-template-areas:
+      "header header header"
+      "aside  right  main";
+  }
+
+  #siteData {
+    display: flex;
+    padding: 1.5rem 0 0;
+  }
+
+  main {
+    padding: 1.5rem 0 3rem;
+  }
+}
+
+@media (max-width: 959px) {
+  body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "aside"
+      "right"
+      "main";
+    padding: 0;
+  }
+
+  header {
+    margin: 0;
+  }
+
+  #profileInfo {
+    position: static;
+    padding: 1rem 1rem 0;
+  }
+
+  #profileInfoDiv {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    max-height: none;
+    overflow: visible;
+    padding: 1rem;
+  }
+
+  #siteData {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    padding: 0 1rem 1rem;
+  }
+
+  #mostLikedDiv,
+  #siteData > .peopleCard {
+    padding: 1rem;
+  }
+
+  main {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  #siteData {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+  }
+
+  header img {
+    max-width: 120px;
+  }
+
+  #usernamePicture {
+    width: 34px;
+    height: 34px;
+  }
+
+  #headerUsername {
+    font-size: 0.9rem;
+  }
+
+  #logoutButton {
+    padding: 0.45rem 0.7rem;
+  }
+
+  #upperPostDiv,
+  #postsFetchDiv > div {
+    padding: 1rem;
+  }
+
+  #upperPostDiv {
+    grid-template-columns: 38px minmax(0, 1fr);
+    column-gap: 0.7rem;
+  }
+
+  #picturePic {
+    width: 38px;
+    height: 38px;
+  }
+
+  #postsFetchDiv > div > div:nth-child(n+3) > div {
+    grid-template-columns: 32px minmax(0, 1fr);
+    column-gap: 0.6rem;
+  }
+
+  #postsFetchDiv > div > div:nth-child(n+3) img {
+    width: 32px;
+    height: 32px;
+  }
+}
