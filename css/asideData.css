@@ -464,3 +464,119 @@ main {
     height: 32px;
   }
 }
+
+/* =========================================================
+   CARD ATIVIDADE RECENTE
+   ========================================================= */
+
+#recentActivitiesDiv {
+    background: #ffffff;
+    border: 1px solid #e5e1d8;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    min-width: 0;
+}
+
+/* Cabeçalho */
+#recentActivitiesDiv .mostLikedHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+#recentActivitiesDiv .mostLikedHeader svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: #1760a8;
+}
+
+.recentActTitle {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Lista de atividades */
+.recentActList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.recentActList:empty {
+    display: none;
+}
+
+/* Cada atividade */
+.recentActItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #ece8df;
+    min-width: 0;
+}
+
+/* Nome e ação */
+.recentActItem p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #1f2937;
+    overflow-wrap: anywhere;
+}
+
+.recentActItem strong {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Texto do comentário */
+.recentActComment {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #6b7280;
+    overflow-wrap: anywhere;
+
+    /* Limita o comentário a 2 linhas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+/* Tablets */
+@media (max-width: 1150px) {
+    #recentActivitiesDiv {
+        padding: 1rem;
+    }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+    #recentActivitiesDiv {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .recentActItem {
+        padding: 0.65rem 0;
+    }
+
+    .recentActItem p {
+        font-size: 0.85rem;
+    }
+
+    .recentActComment {
+        font-size: 0.78rem;
+    }
+}
