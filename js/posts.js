@@ -79,6 +79,15 @@ async function get_user_info(user){
 
         let startButton = document.createElement("button");
         startButton.classList.add("profile-actions-button");
+        startButton.addEventListener("click", (() =>{
+            get_posts();
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+            });
+        }));
+
         let homeIcon = document.createElement("span");
         let startText = document.createElement("span");
         startText.textContent = "Início";
@@ -89,6 +98,16 @@ async function get_user_info(user){
 
         let showLikesButton = document.createElement("button");
         showLikesButton.classList.add("profile-actions-button");
+        showLikesButton.addEventListener("click", ((e)=> {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: "smooth"
+            });
+            get_posts(1, 0);
+        }))
+
         let likeIcon = document.createElement("span");
         let likeText = document.createElement("span");
         likeText.textContent = "Curtidas";
@@ -99,6 +118,15 @@ async function get_user_info(user){
 
         let showUserCommentsButton = document.createElement("button");
         showUserCommentsButton.classList.add("profile-actions-button");
+        showUserCommentsButton.addEventListener("click", ((e)=> {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                left: 0,    
+                behavior: "smooth"
+            });
+            get_posts(0, 1);
+        }))
         let commentIcon = document.createElement("span");
         let commentText = document.createElement("span");
         commentText.textContent = "Comentários";
@@ -124,7 +152,7 @@ async function get_user_info(user){
     }
 }
 
-async function get_posts(){
+async function get_posts(likeButton=0, commentButton=0){
     try{
         const token = localStorage.getItem("token");
         const response = await fetch(postsUrl + "/posts/", {
@@ -162,8 +190,9 @@ async function get_posts(){
             }   
         }
 
+        show_posts(postsData, usersData, likeButton, commentButton);
         get_user_info(me);
-        show_posts(postsData, usersData);
+        ;
 
     }
     catch(e){
@@ -505,7 +534,21 @@ function alreadyLiked(post) {
     return false;
 }
 
-async function show_posts(posts, users){
+function alreayCommented(post){
+    const myId = Number(localStorage.getItem("loggedUserId"));
+
+    for (let i = 0; i < post.comentarios.length; i++) {
+        const comment = post.comentarios[i];
+
+         if (Number(comment.usuario) === myId) {    
+            return true;
+        }
+    }
+
+    return false;
+}
+
+async function show_posts(posts, users, likeButton=0, commentButton=0){
     if(!posts){return};
 
     postsDiv.replaceChildren();
@@ -514,6 +557,13 @@ async function show_posts(posts, users){
     let userPostsLikesCount = 0;
 
     for(let post of posts){
+        if(likeButton == 1 && !alreadyLiked(post)){
+            continue;
+        }
+        if(commentButton==1 && !alreayCommented(post)){
+            continue;
+        }
+        
         //-------CREATING HTML ELEMENTS FOR EACH POST-------
         const postDiv = document.createElement("div");
 
