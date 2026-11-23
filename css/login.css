@@ -196,3 +196,16 @@ body {
     border-radius: 50%;
     margin: 0 auto 16px auto;
 }
+
+#loginForm .form-error,
+#signUpForm .form-error {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: #d64545;
+  text-align: center;
+}
+
+#loginForm .form-error:empty,
+#signUpForm .form-error:empty {
+  display: none;
+}
