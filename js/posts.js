@@ -5,12 +5,9 @@ localStorage.removeItem("img");
 //-------HTML/CSS SELECTORS-------
 const userPic = document.querySelector("#usernamePicture");
 const headerUsername = document.querySelector("#headerUsername");
-const logutButton = document.querySelector("#logoutButton");
 
-const profileInfoAside = document.querySelector("#profileInfo");
 const profileInfoDiv = document.querySelector("#profileInfoDiv");
 
-const upperPostDiv = document.querySelector("#upperPostDiv");
 const postsDiv = document.querySelector("#postsFetchDiv");
 
 
@@ -80,6 +77,7 @@ async function get_user_info(user){
         let startButton = document.createElement("button");
         startButton.classList.add("profile-actions-button");
         startButton.addEventListener("click", (() =>{
+            checkToken();
             get_posts();
             window.scrollTo({
                 top: 0,
@@ -99,6 +97,7 @@ async function get_user_info(user){
         let showLikesButton = document.createElement("button");
         showLikesButton.classList.add("profile-actions-button");
         showLikesButton.addEventListener("click", ((e)=> {
+            checkToken();
             e.preventDefault();
             window.scrollTo({
                 top: 0,
@@ -119,6 +118,7 @@ async function get_user_info(user){
         let showUserCommentsButton = document.createElement("button");
         showUserCommentsButton.classList.add("profile-actions-button");
         showUserCommentsButton.addEventListener("click", ((e)=> {
+            checkToken();
             e.preventDefault();
             window.scrollTo({
                 top: 0,
@@ -153,6 +153,7 @@ async function get_user_info(user){
 }
 
 async function get_posts(likeButton=0, commentButton=0){
+    checkToken();
     try{
         const token = localStorage.getItem("token");
         const response = await fetch(postsUrl + "/posts/", {
@@ -236,8 +237,10 @@ addImageButton.addEventListener("click", () => {
 });
 
 publishPostButton.addEventListener("click", async () => {
+    checkToken();
+    publishPostButton.disabled = true;
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");    
         
         if(postTextarea.value.trim() === "") {
             alert("Digite uma mensagem válida!");
@@ -258,17 +261,17 @@ publishPostButton.addEventListener("click", async () => {
             headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token},
             body: JSON.stringify(newPost),
         };
-
+        
         publishPostButton.textContent = "Publicando...";
 
         const response = await fetch(postsUrl + "/posts/", op);
-    
+        
         if(!response.ok) {
             throw new Error("Erro ao publicar!" + response.status); 
         }
 
         postTextarea.value = "";
-
+        
         imageUrlInput.value = "";
         imageUrlInput.hidden = true;
         
@@ -278,10 +281,12 @@ publishPostButton.addEventListener("click", async () => {
         console.log(error.message);
     } finally {
         publishPostButton.textContent = "Publicar";
+        publishPostButton.disabled = false;
     }
 })
 
 async function edit_post(post, text, image){
+    checkToken();
     let editedPost = {
         texto: text,
         img: image 
@@ -412,6 +417,7 @@ async function like(idPost){
 }
 
 async function comment(post, commentText){
+    checkToken();
     const commentUser = {
         id: localStorage.getItem("loggedUserId"),
         texto: commentText
@@ -435,6 +441,7 @@ async function comment(post, commentText){
 }
 
 async function delete_comment(commentId){
+    checkToken();
     const op = {
         method: "DELETE",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem("token")}
@@ -453,6 +460,7 @@ async function delete_comment(commentId){
 }
 
 async function edit_comment(comment, input, commentContent, commentBox){
+    checkToken();
     if(input.value.trim() == ""){
         input.classList.add('empty-input');
         throw new Error("Não há nada digitado.");
@@ -556,7 +564,12 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
     let userPostsCount = 0;
     let userPostsLikesCount = 0;
 
-    for(let post of posts){
+    for(let post of posts.toReversed()){
+        if(post.usuario == Number(localStorage.getItem("loggedUserId"))){
+            userPostsCount += 1;
+            userPostsLikesCount += post.likes.length;
+        }
+
         if(likeButton == 1 && !alreadyLiked(post)){
             continue;
         }
@@ -604,11 +617,7 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
         postUsername.textContent = user.nome;
         postText.textContent = post.texto;
         
-        if(post.usuario == Number(localStorage.getItem("loggedUserId"))){
-
-            userPostsCount += 1;
-            userPostsLikesCount += post.likes.length;
-            
+        if(post.usuario == Number(localStorage.getItem("loggedUserId"))){            
             //Edit post
             let editPostButton = document.createElement("button");
             editPostButton.classList.add('icon');
@@ -629,6 +638,7 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
 
                 let editPostInput = document.createElement("input");
                 editPostInput.classList.add("edit-post-input");
+                editPostInput.required = true;
 
                 let editPostBox = document.createElement("form");
                 
@@ -736,6 +746,7 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
                     }
 
                     const editInput = document.createElement("input");
+                    editInput.required = true;
                     editInput.value = comment;
                     editInput.classList.add('comment-input');
 
@@ -809,17 +820,20 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
         }
         
         likeBtn.addEventListener('click', async () => {
+            likeBtn.disabled = true;
             const liked = likeIcon.classList.contains("icon-heart-filled");
-
+            
             const ok = await like(post.id);
             if(!ok) return;
-
+            
             if(liked) {
                 likeIcon.className = "icon icon-heart";
                 likeCount.textContent = Number(likeCount.textContent) - 1;
+                likeBtn.disabled = false;
             } else {
                 likeIcon.className = "icon icon-heart-filled";
                 likeCount.textContent = Number(likeCount.textContent) + 1;
+                likeBtn.disabled = false;
             }
         });
 

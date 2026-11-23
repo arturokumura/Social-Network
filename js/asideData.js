@@ -254,7 +254,7 @@ async function showPeopleCard() {
 }
 
 //Recent activity card
-async function showRecentActivity() {
+async function  showRecentActivity() {
     const recentActDiv = document.querySelector("#recentActivitiesDiv");
 
     const icon = document.createElement("i");
