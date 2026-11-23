@@ -12,7 +12,7 @@ function checkToken() {
         const payload = JSON.parse(atob(token.split(".")[1].replaceAll("-", "+").replaceAll("_", "/")));
 
         if (payload.exp * 1000 < Date.now()) {
-            localStorage.removeItem("token");
+            clearSession();
             alert("Sua sessão expirou. Faça login novamente.");
             window.location.replace("login.html");
             return false;
@@ -21,7 +21,7 @@ function checkToken() {
         return true;   
     }
     catch (e) {
-        localStorage.removeItem("token");
+        clearSession();
         window.location.replace("login.html");
         return false;
     }
@@ -35,6 +35,10 @@ function showError(elementId, message) {
     } else {
         alert(message);
     }
+}
+
+if (localStorage.getItem("token") && document.querySelector("#loginForm")) {
+    location.replace("index.html");
 }
 
 //----------LOGIN---------
@@ -52,8 +56,12 @@ async function login(email, password) {
    
     try {
         const response = await fetch(url + "/usuarios/login", op);
-        if(!response.ok) {
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
             showError("loginError", "Login ou senha incorretos.");
+            return;
+        }
+        if (!response.ok) {
+            showError("loginError", "Erro no servidor. Tente novamente.");
             return;
         }
 
@@ -67,13 +75,17 @@ async function login(email, password) {
         }
     }
     catch(e) {
-        console.log("Error authenticating with the server: " + e.message);
         showError("loginError", "Erro de conexão com o servidor.");
     }
 }
 
 //----------CADASTRAR---------
 async function signUp(name, email, password, img) {
+    if (password.length < 6) {
+        showError("signUpError", "A senha precisa ter ao menos 6 caracteres.");
+        return;
+    }
+
     const newUser = {
         nome: name,
         login: email,
@@ -89,14 +101,18 @@ async function signUp(name, email, password, img) {
 
     try {
         const response = await fetch(url + "/usuarios/", op);
+
         if(!response.ok) {
             throw new Error("Authentication error: " + response.status);
         }
-        if(response.status === 409 || response.status === 400) {
+
+        else if(response.status === 409 || response.status === 400 || response.status === 401 || response.status === 403) {
             showError("signUpError", "Esse login já está cadastrado ou os dados são inválidos.");
             return;
+
+        } else {
+            window.location.replace("sucessScreen.html");
         }
-        window.location.replace("sucessScreen.html");
     }
     catch(e) {
         alert("Não foi possível criar a conta. Tente novamente.");
@@ -104,9 +120,15 @@ async function signUp(name, email, password, img) {
     }
 }
 
+function clearSession() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("loggedUserId");
+    localStorage.removeItem("loggedUserEmail");
+}
+
 //----------LOGOUT----------
 function logout() {
-    localStorage.removeItem("token");
+    clearSession()
     window.location.replace("login.html");
 }
 
