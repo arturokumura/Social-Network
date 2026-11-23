@@ -558,8 +558,25 @@ function alreayCommented(post){
 
 async function show_posts(posts, users, likeButton=0, commentButton=0){
     if(!posts){return};
-
+    
     postsDiv.replaceChildren();
+
+    if(posts.length == 0){
+        let noPostDiv = document.createElement("div");
+        let noPostIcon = document.createElement("span");
+        noPostIcon.classList.add("icon");
+        noPostIcon.classList.add("icon-missing");
+        let noPostText = document.createElement("p");
+        noPostText.textContent = "teste";
+
+        noPostDiv.appendChild(noPostIcon);
+        noPostDiv.appendChild(noPostText);
+
+        postsDiv.appendChild(noPostDiv);
+
+        return;
+    }
+
     
     let userPostsCount = 0;
     let userPostsLikesCount = 0;
