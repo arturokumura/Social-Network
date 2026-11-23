@@ -1504,3 +1504,85 @@ main {
 .confirm-ok:hover {
   background: #b9271e;
 }
+
+/* =========================================================
+   ESTADO VAZIO DO FEED (nenhum post)
+   O JS cria: div > span.icon.icon-missing + p
+   O cartão (fundo branco, borda, raio) já vem da regra
+   "#postsFetchDiv > div"; aqui só centralizamos o conteúdo.
+   ========================================================= */
+
+/* ícone (caixa de entrada vazia), mesmo padrão de máscara dos outros ícones */
+.icon-missing {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 16 12 14 15 10 15 8 12 2 12'/%3E%3Cpath d='M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 16 12 14 15 10 15 8 12 2 12'/%3E%3Cpath d='M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'/%3E%3C/svg%3E");
+}
+
+/* cartão: conteúdo centralizado na horizontal e na vertical */
+#postsFetchDiv > div:has(> .icon-missing) {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  row-gap: 1.25rem;
+  min-height: 320px;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+/* círculo azul-claro atrás do ícone (mesmo estilo dos estados vazios da coluna direita) */
+#postsFetchDiv > div:has(> .icon-missing)::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background-color: #e3eefb;
+}
+
+/* ícone grande, azul principal, no mesmo espaço do círculo */
+#postsFetchDiv > div > .icon-missing {
+  grid-area: 1 / 1;
+  display: block;
+  width: 52px;
+  height: 52px;
+  background-color: #1760a8;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* texto grande */
+#postsFetchDiv > div:has(> .icon-missing) > p {
+  grid-area: 2 / 1;
+  margin: 0;
+  max-width: 28ch;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1f2937;
+  text-wrap: balance;
+}
+
+@media (max-width: 600px) {
+  #postsFetchDiv > div:has(> .icon-missing) {
+    min-height: 260px;
+    padding: 2.25rem 1.25rem;
+  }
+
+  #postsFetchDiv > div:has(> .icon-missing)::before {
+    width: 88px;
+    height: 88px;
+  }
+
+  #postsFetchDiv > div > .icon-missing {
+    width: 44px;
+    height: 44px;
+  }
+
+  #postsFetchDiv > div:has(> .icon-missing) > p {
+    font-size: 1.15rem;
+  }
+}

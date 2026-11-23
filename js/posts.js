@@ -567,7 +567,7 @@ async function show_posts(posts, users, likeButton=0, commentButton=0){
         noPostIcon.classList.add("icon");
         noPostIcon.classList.add("icon-missing");
         let noPostText = document.createElement("p");
-        noPostText.textContent = "teste";
+        noPostText.textContent = "Parece que não há nenhum post ainda...";
 
         noPostDiv.appendChild(noPostIcon);
         noPostDiv.appendChild(noPostText);
