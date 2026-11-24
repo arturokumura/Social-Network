@@ -4,7 +4,7 @@ function checkToken() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-        window.location.replace("login.html");
+        window.location.replace("index.html");
         return false;
     }
 
@@ -14,7 +14,7 @@ function checkToken() {
         if (payload.exp * 1000 < Date.now()) {
             clearSession();
             alert("Sua sessão expirou. Faça login novamente.");
-            window.location.replace("login.html");
+            window.location.replace("index.html");
             return false;
         }
 
@@ -22,7 +22,7 @@ function checkToken() {
     }
     catch (e) {
         clearSession();
-        window.location.replace("login.html");
+        window.location.replace("index.html");
         return false;
     }
 }
@@ -38,7 +38,7 @@ function showError(elementId, message) {
 }
 
 if (localStorage.getItem("token") && document.querySelector("#loginForm")) {
-    location.replace("index.html");
+    location.replace("feed.html");
 }
 
 //----------LOGIN---------
@@ -69,7 +69,7 @@ async function login(email, password) {
         
         if(data.token) {
             localStorage.setItem("token", data.token);
-            window.location.replace("index.html")
+            window.location.replace("feed.html")
         } else {
             showError("loginError", "Não foi possível entrar. Tente novamente.");
         }
@@ -129,7 +129,7 @@ function clearSession() {
 //----------LOGOUT----------
 function logout() {
     clearSession()
-    window.location.replace("login.html");
+    window.location.replace("index.html");
 }
 
 const logOutButton = document.querySelector("#logoutButton");
