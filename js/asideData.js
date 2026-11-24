@@ -1,9 +1,18 @@
 import { imageValid } from "./posts.js";
 
+function initial(name) {
+  return (Array.from(name || "")[0] || "?").toUpperCase();
+}
+
 const urlBase = "https://ifsp.trojahn.uk/redesocial/";
 const loggedUserId = Number(localStorage.getItem("loggedUserId"));
 
 const siteDataDiv = document.querySelector("#siteData");
+
+// Cabeçalho com o token, igual ao usado no posts.js
+function authHeaders() {
+    return { "Authorization": "Bearer " + localStorage.getItem("token") };
+}
 
 //Most liked posts card
 async function showMostLikedPosts() {
@@ -54,15 +63,24 @@ async function showMostLikedPosts() {
 
     } else {
         let users = [];
-        const usersResponse = await fetch(urlBase + "usuarios/");
+        try {
+            const usersResponse = await fetch(urlBase + "usuarios/", { headers: authHeaders() });
 
-        if (usersResponse.ok) {
-            users = await usersResponse.json();
-        } else {
-            users = [];
+            if (usersResponse.ok) {
+                users = await usersResponse.json();
+            }
+        } catch (error) {
+            console.log(error);
         }
+
         for(const postMostLiked of postsList) {
-            const objeto = await getData(postMostLiked.idUsuario, postMostLiked.idPost, postMostLiked.likes, users);
+            const author = users.find(user => user.id == postMostLiked.idUsuario);
+
+            const objeto = {
+                name: author ? author.nome : "Usuário",
+                text: postMostLiked.texto,
+                likes: postMostLiked.likes
+            };
 
             const row = document.createElement("li");
             row.classList.add("mostLikedItem");
@@ -87,25 +105,9 @@ async function showMostLikedPosts() {
 
 }
 
-async function getLikes(postId) {
-    try {
-        const response = await fetch(urlBase + "posts/" + postId + "/likes");
-        if(!response.ok) {
-            throw new Error("Erro GET likes" + response.status);
-        
-        }
-        const likesData = await response.json();
-
-        return likesData.length;
-
-    } catch(error)  {
-        console.log(error);
-    }
-}
-
 async function getMostLikedPost() {
     try {
-        const response = await fetch(urlBase + "posts/");
+        const response = await fetch(urlBase + "posts/", { headers: authHeaders() });
         if(!response.ok) {
             throw new Error("Erro GET posts " + response.status);
         }
@@ -116,11 +118,12 @@ async function getMostLikedPost() {
 
         for (const post of posts) {
             if (post.likes && post.likes.length > 0) {
-                const totalLikes = await getLikes(post.id);
-                const idPostValue = post.id;
-                const idUsuarioValue = post.usuario;
-
-                likedPostsList.push({idUsuario : idUsuarioValue, idPost: idPostValue, likes: totalLikes});
+                likedPostsList.push({
+                    idUsuario: post.usuario,
+                    idPost: post.id,
+                    texto: post.texto,
+                    likes: post.likes.length
+                });
             }
         }
 
@@ -138,43 +141,21 @@ function sorted(a,b) {
     return a.likes - b.likes;
 }
 
-async function getData(idUser, idPost, likesCount, users) {
-    let userName;
-    for(const user of users) {
-        if(user.id == idUser) {
-            userName = user.nome;
-            break;
-        } 
-    }
-
-    const responsePost = await fetch(urlBase + "posts/" + idPost);
-    
-    if(!responsePost.ok) {
-        throw new Error("Erro ao buscar dados dos posts " + responsePost.status);
-    }
-
-    const posts = await responsePost.json();
-
-    const message = posts.texto;
-
-    return {"name" : userName, "text": message, "likes": likesCount};
-}
-
 showMostLikedPosts();
 
 //people card
 async function listRandomPeople() {
-    const response = await fetch(urlBase + "usuarios/");
+    const response = await fetch(urlBase + "usuarios/", { headers: authHeaders() });
 
     if(!response.ok) {
         throw new Error("Erro na requisição de usuários");
     }
 
     const users = await response.json();
-    const randomPeopleList = await users
-        .slice()
+    const randomPeopleList = users
+        .filter(user => user.id != loggedUserId)
         .sort(() => Math.random() - 0.5)
-        .slice(0,3)
+        .slice(0, 3);
     
     return randomPeopleList;
 }
@@ -223,8 +204,7 @@ async function showPeopleCard() {
         lucide.createIcons();
 
     } else {
-        const list = await listRandomPeople();
-        for(const user of list) {
+        for(const user of usersList) {
             const row = document.createElement("li");
             row.classList.add("peopleItem");
 
@@ -240,7 +220,7 @@ async function showPeopleCard() {
                 userPic.style.backgroundSize = "cover";
                 userPic.style.backgroundPosition = "center";
             } else {
-                userPic.textContent = user.nome[0].toUpperCase();
+                userPic.textContent = initial(user.nome);
             }
 
             row.append(userPic, userName);
@@ -254,7 +234,7 @@ async function showPeopleCard() {
 }
 
 //Recent activity card
-async function  showRecentActivity() {
+async function showRecentActivity() {
     const recentActDiv = document.querySelector("#recentActivitiesDiv");
 
     const icon = document.createElement("i");
@@ -276,7 +256,7 @@ async function  showRecentActivity() {
     recentActDiv.appendChild(recentActList);
 
     try {
-        const responsePosts = await fetch(urlBase + "posts/");
+        const responsePosts = await fetch(urlBase + "posts/", { headers: authHeaders() });
 
         if (!responsePosts.ok) {
             throw new Error("Erro ao buscar posts");
@@ -284,7 +264,7 @@ async function  showRecentActivity() {
 
         const posts = await responsePosts.json();
 
-        const responseUsers = await fetch(urlBase + "usuarios/");
+        const responseUsers = await fetch(urlBase + "usuarios/", { headers: authHeaders() });
 
         if (!responseUsers.ok) {
             throw new Error("Erro ao buscar usuários");
@@ -374,6 +354,4 @@ async function  showRecentActivity() {
 }
 
 showRecentActivity();
-listRandomPeople();
 showPeopleCard();
-
